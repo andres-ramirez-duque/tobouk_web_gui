@@ -1,0 +1,10 @@
+<launch>
+  <arg name="run_naoqi_driver"  default="true"/>
+    
+  <include file="$(find tobouk_core)/launch/tobo_core.launch">
+    <arg name="run_naoqi_driver" value="$(arg run_naoqi_driver)"/>
+  </include>
+  
+  <include file="$(find tobo_planner)/launch/tobo_planner.launch"/>
+    
+</launch>
