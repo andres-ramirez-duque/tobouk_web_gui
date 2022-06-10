@@ -1,6 +1,8 @@
 var stop_msg;
 var launch_msg;
 var speech_pub;
+var request_pub;
+var request_sub;
 var launch_run_pub;
 var launch_kill_pub;
 var publishImmidiately = true;
@@ -10,7 +12,28 @@ var proc_stage;
 var ok_anxiety;
 var nao_state;
 var nao_behavior_msg;
+var downloadTimer;
+var requestModalEl = document.getElementById('requestModal');
+var requestModal = bootstrap.Modal.getOrCreateInstance(requestModalEl);
+var r_type;
+var p_step;
+var stopNaoClient;
+var stop_request;
 
+requestModalEl.addEventListener('show.bs.modal', function (event) {
+    // do something...
+    var request_msg = document.getElementById('request_msg')
+    var btn_opt1 = document.getElementById('opt_1')
+    var btn_opt2 = document.getElementById('opt_2')
+    var stages = event.relatedTarget
+    request_msg.textContent = stages[0]
+    btn_opt1.textContent = stages[1][0]
+    btn_opt2.textContent = stages[1][1]
+})
+requestModalEl.addEventListener('hide.bs.modal', function (event) {
+    // do something...
+    clearInterval(downloadTimer); 
+})
 function ros_connect() {
     forEachButton(b => b.removeAttribute("disabled"));
     document.getElementById("ros_connect").setAttribute("disabled","disabled");
@@ -48,8 +71,8 @@ function ros_connect() {
     });
     speech_pub = new ROSLIB.Topic({
         ros : ros,
-        name : '/speech',
-        messageType : 'std_msgs/String'
+        name : '/animated_speech',
+        messageType : 'tobo_planner/action_chain'
     });
     stop_msg = new ROSLIB.Message({
         data: '^call(ALBehaviorManager.stopAllBehaviors())'
@@ -67,21 +90,61 @@ function ros_connect() {
         name : '/kill',
         messageType : 'std_msgs/Empty'
     });
+    request_pub = new ROSLIB.Topic({
+        ros : ros,
+        name : '/request',
+        messageType : 'tobo_planner/web_chain'
+    });
+    request_sub = new ROSLIB.Topic({
+        ros : ros,
+        name : '/listener_req',
+        messageType : 'tobo_planner/web_chain'
+    });
+    request_sub.subscribe(function(message) {
+        console.log('Received message on ' + request_sub.name + ', Plan Step: ' + message.plan_step);
+        r_type = message.request_type
+        p_step = message.plan_step
+        if (message.request_type == 'stage progression'){
+            msg = 'Please select between the following options which corresponds to the current procedure stage'    
+        }else if(message.request_type == 'anxiety test'){
+            msg = 'Please select True if the child anxiety level is low, otherwise select False'
+        }else{
+            msg = 'Please select between the following options'
+        }
+        requestModal.toggle([msg, message.parameters]);
+        coundDown(message.duration);
+    });
+    stopNaoClient = new ROSLIB.Service({
+        ros : ros,
+        name : '/stop_nao',
+        serviceType : 'tobo_planner/PlannerMode'
+      });
+    
+    stop_request = new ROSLIB.ServiceRequest({
+        planner_mode : 'stop',
+        plan_step : 0
+    });
 }
 
 function ros_disconnect() {
     ros.close();
     forEachButton(b => b.setAttribute("disabled","disabled"));
     document.getElementById("ros_connect").removeAttribute("disabled");
+    request_sub.unsubscribe();
 }
 function btn_param(procstage) {
+    requestModal.toggle(['Selection',['Introstep','Preprocedure']]);
+    coundDown(10);
     proc_stage.set(procstage);
 }
 
 function pause_nao() {
-    nao_state.set('bussy');
-    speech_pub.publish(stop_msg);
-    console.log('NAO Behavior paused');
+    stopNaoClient.callService(stop_request, function(result) {
+        console.log('Result for service call on '
+          + stopNaoClient.name
+          + ': '
+          + result.planner_ok);
+    });
 }
 
 function resume_nao() {
@@ -100,10 +163,27 @@ function launch_kill() {
 function behavior_nao(nao_behavior) {
     nao_state.set('bussy');
     nao_behavior_msg = new ROSLIB.Message({
-        data: "^call(ALBehaviorManager.runBehavior('" + nao_behavior + "'))"
+        speech_cmd: "^call(ALBehaviorManager.runBehavior('" + nao_behavior + "'))"
     });
     speech_pub.publish(nao_behavior_msg);
-    console.log('NAO Behavior Running:' + nao_behavior_msg.data);
+    console.log('NAO Behavior Running:' + nao_behavior_msg.speech_cmd);
+}
+function pub_request(msg) {
+    requestModal.hide();
+    clearInterval(downloadTimer); 
+    if (msg == 'option1'){
+        var param = document.getElementById('opt_1').textContent
+    } else{
+        var param = document.getElementById('opt_2').textContent
+    }
+    var requested_msg = new ROSLIB.Message({
+        plan_step: parseInt(p_step),
+        request_type: String(r_type),
+        parameters: [String(param)],
+        duration: parseFloat(1.0)
+    });
+    request_pub.publish(requested_msg);
+    console.log('Requested response: ' + requested_msg.parameters);
 }
 function onchange_anxiety(anxiety_val) {
     if(anxiety_val<60){
@@ -121,11 +201,24 @@ function forEachButton(func) {
         func(elements[i])
     }
 }
-window.onload = function () {
+//countdown
+function coundDown(countdown) {
+    console.log("countdown");
+    var countdownNumberEl = document.getElementById("timer");
+    countdownNumberEl.textContent = countdown;
+    downloadTimer = setInterval(function() {
+      countdownNumberEl.textContent = countdown;
+      countdown--;
+      if (countdown < 0) {
+        requestModal.hide();
+        clearInterval(downloadTimer);   
+      }
+    }, 1000);
+}
+
+window.onload = function () {     
     forEachButton(b => b.setAttribute("disabled", "disabled"));
     document.getElementById("ros_connect").removeAttribute("disabled");
-
     document.getElementById("ros_status").innerHTML = " ";
     document.getElementById("web_status").innerHTML = " ";
-    
 }
