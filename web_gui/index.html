@@ -32,63 +32,84 @@
             </div>
         </div>
     </div>
+    
     <div class="container-lg">
+
+        <div class="box bg-2">
+                <div class=" col-md-1"></div>
+                <div class="col-md-5">
+                    <form>
+                        <legend>Personalized interaction form</legend>
+                        <label for="inputname" class="form-label">Child Name</label>
+                        <input type="text" id="inputname" class="form-control" aria-describedby="nameHelpBlock">
+                        <label for="selectage" class="form-label">Child's Age Range</label>
+                        <select id="selectage" class="form-select"  aria-describedby="ageHelpBlock">
+                            <option selected>Select the child's age ranges</option>
+                            <option value="true">Younger child (5-8)</option>
+                            <option value="false">Older child (9-12)</option>
+                        </select>
+                        <div id="ageHelpBlock" class="form-text">These data will be used only to personalize some stages of the interaction..</div>
+                    </form>
+                </div>
+                <div class=" col-md-1"></div>
+                <div class=" col-md-3">
+                    <div class="d-grid gap-2 justify-content-md-end">
+                        <button onclick="set_personalized_form()" type="submit" class="btn btn-info btn-lg">Submit</button>
+                        <button onclick="btn_param('procstage preprocedure')" type="button" class="btn btn-info btn-lg">Calibration</button>
+                    </div>
+                </div>
+                <div class=" col-md-1"></div>
+        </div>
+
         <div class="box bg-1">
-            <div class="row align-items-center">
-                <div class=" col-md-6">
+                <div class=" col-md-2"></div>
+                <div class=" col-md-5">
                     <h4>ROS-Launch Control:</h4>
                     <button onclick="launch_run()" type="button" class="btn btn-outline-danger btn-lg">Launch Run</button>
                     <button onclick="launch_kill()" type="button" class="btn btn-outline-success btn-lg">Launch Stop</button>
                 </div>
-                <div class=" col-md-2"></div>
-                <div class=" col-md-4">
-                    <button onclick="pause_nao()" type="button" class="btn btn-dark btn-lg btn-block">Pause NAO <i class="fa fa-pause" style="font-size:24px"></i></button>
-                    <button onclick="resume_nao()" type="button" class="btn btn-light btn-lg btn-block">Resume NAO <i class="fa fa-play" style="font-size:24px"></i></button>
+                <div class=" col-md-3">
+                    <div class="d-grid gap-2 justify-content-md-end">
+                        <button onclick="pause_nao()" type="button" class="btn btn-dark btn-lg">Pause NAO <i class="fa fa-pause" style="font-size:24px"></i></button>
+                        <button onclick="resume_nao()" type="button" class="btn btn-light btn-lg">Resume NAO <i class="fa fa-play" style="font-size:24px"></i></button>
+                    </div>
                 </div>
-            </div>
+                <div class=" col-md-2"></div>
+        </div>
+        <div class="progress" style="height: 36px;">
+            <div id="procedure_progress" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%; font-size:large;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"> </div>
         </div>
         <div class="box bg-2">
-            <div class="row align-items-center">
-                <div class="col-md-12">
-                    <button onclick="btn_param('procstage introstep')" type="button" class="btn btn-info btn-lg">Introstep</button>
-                    <button onclick="btn_param('procstage preprocedure')" type="button" class="btn btn-info btn-lg">Preprocedure</button>
-                    <button onclick="btn_param('procstage procedure')" type="button" class="btn btn-info btn-lg">Procedure</button>
-                    <button onclick="btn_param('procstage debrief')" type="button" class="btn btn-info btn-lg">Debrief</button>
-                    <button onclick="btn_param('procstage end')" type="button" class="btn btn-info btn-lg">End</button>
-                </div>
+            <div class=" col-md-2"></div>
+            <div class="col-md-4">
+                <h5><i class="fa fa-smile-o" aria-hidden="true" style="font-size:36px; color: green"></i> 
+                    &nbsp;Anxiety&nbsp;
+                    <i class="fa fa-meh-o" aria-hidden="true" style="font-size:36px; color: yellow"></i>
+                    &nbsp;Perception&nbsp;
+                    <i class="fa fa-frown-o" aria-hidden="true" style="font-size:36px; color: red"></i>
+                </h5>
+                <input type="range" min="0" max="100" class="form-range" id="anxiety-level" onchange="onchange_anxiety(this.value)">
             </div>
-        </div>
-        <div class="box bg-1">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h5><i class="fa fa-smile-o" aria-hidden="true" style="font-size:36px; color: green"></i> 
-                        &nbsp;Anxiety&nbsp;
-                        <i class="fa fa-meh-o" aria-hidden="true" style="font-size:36px; color: yellow"></i>
-                        &nbsp;Perception&nbsp;
-                        <i class="fa fa-frown-o" aria-hidden="true" style="font-size:36px; color: red"></i>
-                    </h5>
-                    <input type="range" min="0" max="100" class="form-range" id="anxiety-level" onchange="onchange_anxiety(this.value)">
-                </div>
-                <div class="col-md-2"></div>
-                <div class="col-md-4">
-                    <div class="dropup">
-                        <button class="btn btn-secondary dropdown-toggle btn-lg" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                            Run Pre-scripted Behaviors
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu2">
-                            <li><button onclick="behavior_nao('arm_dance/arm_dance')" class="dropdown-item" type="button">Arm Dance</button></li>
-                            <li><button onclick="behavior_nao('macarena_2/behavior_1')" class="dropdown-item" type="button">Macarena</button></li>
-                            <li><button onclick="behavior_nao('gangnam/behavior_1')" class="dropdown-item" type="button">Gangnam Style</button></li>
-                            <li><button onclick="behavior_nao('thriller/behavior_1')" class="dropdown-item" type="button">Thriller</button></li>
-                            <li><button onclick="behavior_nao('saxophone/behavior_1')" class="dropdown-item" type="button">Saxophone</button></li>
-                            <li><button onclick="behavior_nao('animations/Stand/Waiting/AirGuitar_1')" class="dropdown-item" type="button">Guitar</button></li>
-                            <li><button onclick="behavior_nao('taichi/taichi')" class="dropdown-item" type="button">Taichi</button>
-                        </ul>
-                    </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <div class="dropup">
+                    <button class="btn btn-secondary dropdown-toggle btn-lg" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        Run Pre-scripted Behaviors
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu2">
+                        <li><button onclick="behavior_nao('arm_dance/arm_dance')" class="dropdown-item" type="button">Arm Dance</button></li>
+                        <li><button onclick="behavior_nao('macarena_2/behavior_1')" class="dropdown-item" type="button">Macarena</button></li>
+                        <li><button onclick="behavior_nao('gangnam/behavior_1')" class="dropdown-item" type="button">Gangnam Style</button></li>
+                        <li><button onclick="behavior_nao('thriller/behavior_1')" class="dropdown-item" type="button">Thriller</button></li>
+                        <li><button onclick="behavior_nao('saxophone/behavior_1')" class="dropdown-item" type="button">Saxophone</button></li>
+                        <li><button onclick="behavior_nao('animations/Stand/Waiting/AirGuitar_1')" class="dropdown-item" type="button">Guitar</button></li>
+                        <li><button onclick="behavior_nao('taichi/taichi')" class="dropdown-item" type="button">Taichi</button>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="container-lg">
         <div class="box bg-4">
             <div class=" col-md-7">
@@ -109,15 +130,19 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h2 class="modal-title" id="requestModalLabel">Interaction Manager Request</h2>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h2 class="modal-title" id="requestModalLabel">Interaction Manager Request</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <h4 class="modal-title" id="request_msg">'Please select between the following options'</h4> 
-                        <button id='opt_1' onclick="pub_request('option1')" type="button" class="btn btn-dark btn-lg btn-block">Option 1</button>
-                        <button id='opt_2' onclick="pub_request('option2')" type="button" class="btn btn-warning btn-lg btn-block">Option 2</button>
+                <div class="container-lg">
+                    <div class="box bg-4">
+                        <h4 class="modal-title" id="request_msg">'Please select between the following options'</h4>
+                    </div>
+                    <div class="box bg-2">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button id='opt_1' onclick="pub_request('option1')" type="button" class="btn btn-light btn-lg">Option 1</button>
+                            <button id='opt_2' onclick="pub_request('option2')" type="button" class="btn btn-info btn-lg">Option 2</button>
+                        </div> 
                     </div>
                 </div>
             </div>

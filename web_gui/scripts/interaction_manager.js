@@ -5,12 +5,14 @@ var request_pub;
 var request_sub;
 var launch_run_pub;
 var launch_kill_pub;
-var publishImmidiately = true;
+var run_naoqi_driver = 'false';
 var ros_IP;
 var ros;
 var proc_stage;
 var ok_anxiety;
 var nao_state;
+var child_name;
+var is_younger_child;
 var nao_behavior_msg;
 var downloadTimer;
 var requestModalEl = document.getElementById('requestModal');
@@ -65,6 +67,14 @@ function ros_connect() {
         ros : ros,
         name : '/nao_state'
     });
+    child_name = new ROSLIB.Param({
+        ros : ros,
+        name : '/child_name'
+    });
+    is_younger_child = new ROSLIB.Param({
+        ros : ros,
+        name : '/isyoungerchild'
+    });
     ok_anxiety = new ROSLIB.Param({
         ros : ros,
         name : '/parameters/boolean_vars/okanxiety preprocedure'
@@ -83,7 +93,7 @@ function ros_connect() {
         messageType : 'std_msgs/String'
     });
     launch_msg = new ROSLIB.Message({
-        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:=false'
+        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:='+run_naoqi_driver
     });
     launch_kill_pub = new ROSLIB.Topic({
         ros : ros,
@@ -130,12 +140,13 @@ function ros_disconnect() {
     ros.close();
     forEachButton(b => b.setAttribute("disabled","disabled"));
     document.getElementById("ros_connect").removeAttribute("disabled");
+    document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
+    document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)
     request_sub.unsubscribe();
 }
 function btn_param(procstage) {
-    requestModal.toggle(['Selection',['Introstep','Preprocedure']]);
+    requestModal.toggle(['Please select between the following options',['Introstep','Preprocedure']]);
     coundDown(10);
-    proc_stage.set(procstage);
 }
 
 function pause_nao() {
@@ -154,8 +165,14 @@ function resume_nao() {
 function launch_run() {
     document.getElementById("ros_status").innerHTML = "<span style='color: green;'>Running</span>";
     launch_run_pub.publish(launch_msg);
+    
+    document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 20 +"%;");
+    document.getElementById("procedure_progress").setAttribute("aria-valuenow",20)
+    document.getElementById("procedure_progress").textContent = "IntroStep -----> "
 }
 function launch_kill() {
+    document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
+    document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)
     document.getElementById("ros_status").innerHTML = "<span style='color: red;'>Stopped</span>";
     launch_kill_pub.publish();
 }
@@ -163,7 +180,7 @@ function launch_kill() {
 function behavior_nao(nao_behavior) {
     nao_state.set('bussy');
     nao_behavior_msg = new ROSLIB.Message({
-        speech_cmd: "^call(ALBehaviorManager.runBehavior('" + nao_behavior + "'))"
+        speech_cmd: "^call(ALBehaviorManager.runBehavior(\"" + nao_behavior + "\"))"
     });
     speech_pub.publish(nao_behavior_msg);
     console.log('NAO Behavior Running:' + nao_behavior_msg.speech_cmd);
@@ -175,6 +192,14 @@ function pub_request(msg) {
         var param = document.getElementById('opt_1').textContent
     } else{
         var param = document.getElementById('opt_2').textContent
+        if (param != "false"){
+            var procedure_value = parseInt(document.getElementById("procedure_progress").getAttribute("aria-valuenow")) + 20
+            document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ procedure_value +"%;");
+            document.getElementById("procedure_progress").setAttribute("aria-valuenow",procedure_value)
+            var procedure_chain = document.getElementById("procedure_progress").textContent
+            document.getElementById("procedure_progress").textContent = procedure_chain + param + " -----> "
+            console.log('Procedure Value ' + document.getElementById("procedure_progress").getAttribute("aria-valuenow"));
+        }
     }
     var requested_msg = new ROSLIB.Message({
         plan_step: parseInt(p_step),
@@ -201,6 +226,14 @@ function forEachButton(func) {
         func(elements[i])
     }
 }
+function set_personalized_form(){
+    child_name.set(document.getElementById('inputname').value);
+    is_younger_child.set(document.getElementById('selectage').value)
+    console.log('Child Name set: ' + document.getElementById('inputname').value + '; Is Child Younger: ' + document.getElementById('selectage').value);
+    document.getElementById("inputname").setAttribute("disabled","disabled");
+    document.getElementById("selectage").setAttribute("disabled","disabled");
+
+}
 //countdown
 function coundDown(countdown) {
     console.log("countdown");
@@ -216,7 +249,9 @@ function coundDown(countdown) {
     }, 1000);
 }
 
-window.onload = function () {     
+window.onload = function () {
+    document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
+    document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)     
     forEachButton(b => b.setAttribute("disabled", "disabled"));
     document.getElementById("ros_connect").removeAttribute("disabled");
     document.getElementById("ros_status").innerHTML = " ";
