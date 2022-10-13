@@ -5,7 +5,7 @@ var request_pub;
 var request_sub;
 var launch_run_pub;
 var launch_kill_pub;
-var run_naoqi_driver = 'false';
+var run_naoqi_driver = 'true';
 var ros_IP;
 var ros;
 var proc_stage;
@@ -21,19 +21,25 @@ var r_type;
 var p_step;
 var stopNaoClient;
 var stop_request;
+var mybandera = false;
 
 requestModalEl.addEventListener('show.bs.modal', function (event) {
-    // do something...
     var request_msg = document.getElementById('request_msg')
     var btn_opt1 = document.getElementById('opt_1')
     var btn_opt2 = document.getElementById('opt_2')
+    btn_opt2.style.display = 'initial'
     var stages = event.relatedTarget
     request_msg.textContent = stages[0]
-    btn_opt1.textContent = stages[1][0]
-    btn_opt2.textContent = stages[1][1]
+    if ( stages[1].length == 1){
+        btn_opt1.textContent = stages[1][0]
+        btn_opt2.style.display = 'none'
+    }else{
+        btn_opt1.textContent = stages[1][0]
+        btn_opt2.textContent = stages[1][1]    
+    }
+    //console.log(stages[1].length)
 })
 requestModalEl.addEventListener('hide.bs.modal', function (event) {
-    // do something...
     clearInterval(downloadTimer); 
 })
 function ros_connect() {
@@ -84,16 +90,13 @@ function ros_connect() {
         name : '/animated_speech',
         messageType : 'tobo_planner/action_chain'
     });
-    stop_msg = new ROSLIB.Message({
-        data: '^call(ALBehaviorManager.stopAllBehaviors())'
-    });
     launch_run_pub = new ROSLIB.Topic({
         ros : ros,
         name : '/run',
         messageType : 'std_msgs/String'
     });
     launch_msg = new ROSLIB.Message({
-        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:='+run_naoqi_driver
+        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:=false'
     });
     launch_kill_pub = new ROSLIB.Topic({
         ros : ros,
@@ -111,18 +114,55 @@ function ros_connect() {
         messageType : 'tobo_planner/web_chain'
     });
     request_sub.subscribe(function(message) {
-        console.log('Received message on ' + request_sub.name + ', Plan Step: ' + message.plan_step);
+        console.log('Received message on ' + request_sub.name + ', Request Type: ' + message.request_type + ', Plan Step: ' + message.plan_step);
         r_type = message.request_type
         p_step = message.plan_step
-        if (message.request_type == 'stage progression'){
-            msg = 'Please select between the following options which corresponds to the current procedure stage'    
-        }else if(message.request_type == 'anxiety test'){
+        if(message.request_type == 'anxiety test'){
             msg = 'Please select True if the child anxiety level is low, otherwise select False'
+        }else if(message.request_type == 'type preference query'){
+            msg = 'Which of the following types of activities do you prefer?'
+        }else if(message.request_type == 'activity preference query'){
+            msg = 'Which of the following activities do you prefer?'
+        }else if(message.request_type == 'engagement test'){
+            msg = 'Please select True if the child is engaged, otherwise select False'
+        }else if(message.request_type == 'procedure complete query'){
+            msg = 'Has the procedure already finished?'
+        }else if(message.request_type == 'wait'){
+            message.parameters = ['Ready']
+            msg = 'Are you ready to progress?'
+        }else if(message.request_type == 'site check query'){
+            msg = 'Select True if site check will be performed, otherwise select False'
+        }else if(message.request_type == 'procedure ended ok query'){
+            msg = 'select True if the procedure is going well, otherwise select False'
         }else{
             msg = 'Please select between the following options'
         }
+        console.log(message.parameters.length)
         requestModal.toggle([msg, message.parameters]);
         coundDown(message.duration);
+    });
+    command_sub = new ROSLIB.Topic({
+        ros : ros,
+        name : '/listener_com',
+        messageType : 'tobo_planner/web_chain'
+    });
+    command_sub.subscribe(function(message) {
+        console.log('Received message on ' + command_sub.name + ', Request Type: ' + message.request_type + ', Plan Step: ' + message.plan_step);
+        if (message.request_type == 'stage progression'){
+            if (message.parameters == 'goal'){
+                document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 100 +"%;");
+                document.getElementById("procedure_progress").setAttribute("aria-valuenow",100)
+                document.getElementById("procedure_progress").textContent = "<----- Goal ----->"
+            }else{
+                msg = 'Please select between the following options which corresponds to the current procedure stage'
+                var procedure_value = parseInt(document.getElementById("procedure_progress").getAttribute("aria-valuenow")) + 15
+                document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ procedure_value +"%;");
+                document.getElementById("procedure_progress").setAttribute("aria-valuenow",procedure_value)
+                var procedure_chain = document.getElementById("procedure_progress").textContent
+                document.getElementById("procedure_progress").textContent = procedure_chain + message.parameters + " ---> "
+                console.log('Procedure Value ' + document.getElementById("procedure_progress").getAttribute("aria-valuenow"));
+            }
+        }
     });
     stopNaoClient = new ROSLIB.Service({
         ros : ros,
@@ -145,8 +185,15 @@ function ros_disconnect() {
     request_sub.unsubscribe();
 }
 function btn_param(procstage) {
-    requestModal.toggle(['Please select between the following options',['Introstep','Preprocedure']]);
-    coundDown(10);
+    if (mybandera){
+        requestModal.toggle(['Which of the following types of activities do you prefer?',['calm','active']]);
+        coundDown(10);
+    }else{
+        requestModal.toggle(['Are you ready to progress?',['Ready']]);
+        coundDown(-1);
+    }
+    mybandera = !mybandera
+    
 }
 
 function pause_nao() {
@@ -166,9 +213,9 @@ function launch_run() {
     document.getElementById("ros_status").innerHTML = "<span style='color: green;'>Running</span>";
     launch_run_pub.publish(launch_msg);
     
-    document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 20 +"%;");
-    document.getElementById("procedure_progress").setAttribute("aria-valuenow",20)
-    document.getElementById("procedure_progress").textContent = "IntroStep -----> "
+    document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 10 +"%;");
+    document.getElementById("procedure_progress").setAttribute("aria-valuenow",10)
+    document.getElementById("procedure_progress").textContent = "-----> "
 }
 function launch_kill() {
     document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
@@ -192,14 +239,6 @@ function pub_request(msg) {
         var param = document.getElementById('opt_1').textContent
     } else{
         var param = document.getElementById('opt_2').textContent
-        if (param != "false"){
-            var procedure_value = parseInt(document.getElementById("procedure_progress").getAttribute("aria-valuenow")) + 20
-            document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ procedure_value +"%;");
-            document.getElementById("procedure_progress").setAttribute("aria-valuenow",procedure_value)
-            var procedure_chain = document.getElementById("procedure_progress").textContent
-            document.getElementById("procedure_progress").textContent = procedure_chain + param + " -----> "
-            console.log('Procedure Value ' + document.getElementById("procedure_progress").getAttribute("aria-valuenow"));
-        }
     }
     var requested_msg = new ROSLIB.Message({
         plan_step: parseInt(p_step),
@@ -236,17 +275,21 @@ function set_personalized_form(){
 }
 //countdown
 function coundDown(countdown) {
-    console.log("countdown");
+    console.log("countdown Timer set: " + countdown);
     var countdownNumberEl = document.getElementById("timer");
-    countdownNumberEl.textContent = countdown;
-    downloadTimer = setInterval(function() {
-      countdownNumberEl.textContent = countdown;
-      countdown--;
-      if (countdown < 0) {
-        requestModal.hide();
-        clearInterval(downloadTimer);   
-      }
-    }, 1000);
+    if (countdown > 0){
+        countdownNumberEl.textContent = countdown;
+        downloadTimer = setInterval(function() {
+        countdownNumberEl.textContent = countdown;
+        countdown--;
+        if (countdown < 0) {
+            requestModal.hide();
+            clearInterval(downloadTimer);   
+        }
+        }, 1000);
+    }else{
+        countdownNumberEl.textContent = " ";
+    }
 }
 
 window.onload = function () {
