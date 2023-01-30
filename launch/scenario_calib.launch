@@ -1,0 +1,36 @@
+<launch>
+  <arg name="machine_name" default="tobojetuk"/>
+  <node machine="$(arg machine_name)" name="zed2" pkg="tf2_ros" type="static_transform_publisher" args="0.0
+    1.1
+    1.0
+    3.14159
+    0
+    -1.570758
+    world zed2_camera_center"/>
+    
+    <node machine="$(arg machine_name)" name="nao" pkg="tf2_ros" type="static_transform_publisher" args="0.0
+    1.1
+    0.7
+    0
+    0
+    0
+    world nao_frame_id"/>
+    
+    <node machine="$(arg machine_name)" name="focus_frame" pkg="tf2_ros" type="static_transform_publisher" args="0
+    0
+    0
+    0
+    -1.570758
+    0
+    child_gaze focus_frame"/>
+    
+    <node machine="$(arg machine_name)" name="temporal" pkg="tf2_ros" type="static_transform_publisher" args="0
+    0
+    0
+    0
+    0
+    0
+    world child_gaze"/>
+
+</launch>
+

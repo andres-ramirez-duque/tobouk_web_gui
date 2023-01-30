@@ -1,0 +1,6 @@
+#! /bin/bash
+rm $1/*
+gst-launch-1.0 udpsrc port=5000 ! application/x-rtp,media=video,encoding-name=H264,clock-rate=90000,payload=96 ! rtph264depay ! h264parse ! mpegtsmux ! hlssink playlist-root=http://$2:8000/hlstest location=$1/segment_%05d.ts playlist-location=$1/playlist.m3u8 target-duration=1 max-files=5
+
+# gst-launch-1.0 v4l2src device="/dev/video0" ! videoconvert ! clockoverlay ! x264enc tune=zerolatency ! mpegtsmux ! hlssink playlist-root=http://127.0.0.1:5500/hlstest location=$1/segment_%05d.ts playlist-location=$1/playlist.m3u8 target-duration=5 max-files=5
+

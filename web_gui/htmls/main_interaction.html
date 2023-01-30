@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>UK-Canada AI Project</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Andres Ramirez, Alan Linsay">
+    <meta name="description" content="UK-Canada Project main interface">
+    <link rel="stylesheet" type="text/css" href="../css/base.css"/>
+    <link rel="shortcut icon" type="image" href="../favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../bootstrap-5.1.3/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="../css/navbar-top-fixed.css" rel="stylesheet">
+  </head>
+  
+  <body>
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color: #003865;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="../index.html">UK-Canada AI Project</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link disabled" aria-current="page" href="htmls/main_interaction.html">Interaction Dash Board</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="config.html">Config System</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <div class="container-lg">
+        <div class="box bg-4">
+            <div class=" col-md-1"></div>
+            <div class=" col-md-5">
+                <h3>UK-Canada AI Project</h3>
+                <h3><small class="text-muted">Web TOBO GUI</small></h3>
+            </div>
+            <div class=" col-md-4">
+                <legend>Personalized interaction form</legend>
+                <!--label for="ros_ip">Ros Web IP:</label>
+                <input type="text" value="192.168.42.1" id="ros_ip" name="ros_ip"><br><br-->
+            </div>
+            <div class=" col-md-2">
+                <p> </p>
+                <button id="ros_connect"  onclick="ros_connect()" type="button" class="btn btn-light btn-lg"><i class="fa fa-rocket" aria-hidden="true" style="font-size:24px"></i></button>
+                <button id="ros_disconnect" onclick="ros_disconnect()" type="button" class="btn btn-light btn-lg"><i class="fa fa-window-close-o" aria-hidden="true" style="font-size:24px"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-lg">
+
+        <div class="box bg-2">
+            <div class=" col-md-1"></div>
+            <div class="col-md-4">
+                <form>    
+                    <label for="inputname" class="form-label">Child Name</label>
+                    <input type="text" id="inputname" class="form-control" aria-describedby="nameHelpBlock">
+                    <p></p>
+                    <label for="selectage" class="form-label">Child's Age Range</label>
+                    <select id="selectage" class="form-select"  aria-describedby="ageHelpBlock">
+                        <option selected>Select the child's age ranges</option>
+                        <option value="true">Younger child (5-8)</option>
+                        <option value="false">Older child (9-12)</option>
+                    </select>
+                    <div id="ageHelpBlock" class="form-text">These data will be used only to personalize some stages of the interaction..</div>
+                </form>
+            </div>
+            <div class=" col-md-1"></div>
+            <div class="col-md-4">
+                <form>
+                    <label for="selectgender" class="form-label">Child's Gender</label>
+                    <select id="selectgender" class="form-select"  aria-describedby="genderHelpBlock">
+                        <option selected>Select the child's gender</option>
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    <p></p>
+                    <label for="selectcolor" class="form-label">Child's favorite Color</label>
+                    <select id="selectcolor" class="form-select"  aria-describedby="colorHelpBlock">
+                        <option selected>Select the child's favorite color</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                        <option value="red">Red</option>
+                        <option value="white">White</option>
+                        <option value="purple">Purple</option>
+                        <option value="orange">Orange</option>
+                    </select>
+                </form>   
+            </div>
+            <div class=" col-md-1"></div>
+    </div>
+
+        <div class="box bg-1">
+                <div class=" col-md-2"></div>
+                <div class=" col-md-5">
+                    <h4>ROS-Launch Control:</h4>
+                    <button onclick="launch_run()" type="button" class="btn btn-outline-danger btn-lg">Launch Run</button>
+                    <button onclick="launch_kill()" type="button" class="btn btn-outline-success btn-lg">Launch Stop</button>
+                </div>
+                <div class=" col-md-3">
+                    <div class="d-grid gap-2 justify-content-md-end">
+                        <button onclick="pause_nao()" type="button" class="btn btn-dark btn-lg">Pause NAO <i class="fa fa-pause" style="font-size:24px"></i></button>
+                        <button onclick="resume_nao()" type="button" class="btn btn-light btn-lg">Resume NAO <i class="fa fa-play" style="font-size:24px"></i></button>
+                    </div>
+                </div>
+                <div class=" col-md-2"></div>
+        </div>
+        <div class="progress" style="height: 36px;">
+            <div id="procedure_progress" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%; font-size:large;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"> </div>
+        </div>
+    </div>
+
+    <div class="container-lg">
+        <div class="box bg-4">
+            <div class=" col-md-7">
+                <p>Using AI-Enhanced Social Robotics to Improve Children's Healthcare Experiences. 
+                This work is funded by the ESRC/SSHRC Canada-UK Artificial Intelligence Initiative through grant ES/T012986/1
+                (uk-canada-contact@glasgow.ac.uk)
+                </p>
+            </div>
+            <div class=" col-md-1"></div>
+            <div class=" col-md-4">
+                <p>ROS Launch Status: <span id="ros_status"></span></p>
+                <p>Websocket Connection status: <span id="web_status"></span></p>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Pop-up for interaction-manager request -->
+    <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+                    <h2 class="modal-title" id="requestModalLabel">Interaction Manager Request</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-lg">
+                    <div class="box bg-4">
+                        <h4 class="modal-title" id="request_msg">'Please select between the following options'</h4>
+                    </div>
+                    <div class="box bg-2">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button id='opt_1' onclick="pub_request('option1')" type="button" class="btn btn-light btn-lg">Option 1</button>
+                            <button id='opt_2' onclick="pub_request('option2')" type="button" class="btn btn-info btn-lg">Option 2</button>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <h5><span id="timer"></span></h5>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../scripts/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="../bootstrap-5.1.3/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  </body>
+  <script src="../scripts/roslib.min.js"></script>
+  <script src="../scripts/eventemitter2.min.js"></script>
+  <script src="../scripts/interaction_manager.js"></script> 
+</html>

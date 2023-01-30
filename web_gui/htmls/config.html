@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>UK-Canada AI Project</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Andres Ramirez, Alan Linsay">
+    <meta name="description" content="UK-Canada Project main interface">
+    <link rel="stylesheet" type="text/css" href="../css/base.css"/>
+    <link rel="shortcut icon" type="image" href="../favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../bootstrap-5.1.3/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="../css/navbar-top-fixed.css" rel="stylesheet">
+  </head>
+  
+  <body>
+    <script src="../scripts/hls.js"></script>
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color: #003865;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="../index.html">UK-Canada AI Project</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="main_interaction.html">Interaction Dash Board</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="config.html">Config System</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <div class="container-lg">
+        <div class="box bg-4">
+            <div class=" col-md-1"></div>
+            <div class=" col-md-5">
+                <h3>System Configuration</h3>
+                <h3><small class="text-muted">Web TOBO GUI</small></h3>
+            </div>
+            <div class=" col-md-2">
+            </div>
+            <div class=" col-md-3">
+                <label for="ros_ip">Ros Web IP:</label>
+                <input type="text" value="10.42.0.254" id="ros_ip" name="ros_ip"><br><br>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="naoqi_switch" checked>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Run the system with NAO</label>
+                </div>
+            </div>
+            <div class=" col-md-1"></div>
+        </div>
+    </div>
+    <div class="container-lg">
+        <div class="box bg-2">
+            <div class=" col-md-2"></div>
+            <div class=" col-md-8">
+                <video height="400" id="video" controls></video>
+                <!--script>
+                    var video = document.getElementById('video');
+                    if (Hls.isSupported()) {
+                        var hls = new Hls({
+                        debug: true,
+                        });
+                        hls.loadSource('../hlstest/playlist.m3u8');
+                        hls.attachMedia(video);
+                        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+                        video.muted = true;
+                        video.play();
+                        });
+                    }
+                    // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+                    // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element through the `src` property.
+                    // This is using the built-in support of the plain video element, without using hls.js.
+                    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        video.src = '../hlstest/playlist.m3u8';
+                        video.addEventListener('canplay', function () {
+                        video.play();
+                    });
+                    }
+                </script-->
+                <button onclick="start_video()" type="button" class="btn btn-dark">Start Video Monitor  <i class="fa fa-play" style="font-size:18px"></i></button>
+            </div>
+            <div class=" col-md-2"></div>
+        </div>
+        <div class="box bg-2">
+            <div class=" col-md-2"></div>
+            <div class=" col-md-3">
+                <h5>Planner Timeouts in (s)</h5>
+                <input type="text" value="2" id="doactivity" name="doactivity"><br>Do activity timer<br>
+                <input type="text" value="2" id="query_response" name="query_response"><br>Query response timer<br>
+            </div>
+            <div class=" col-md-2"></div>
+            <div class=" col-md-3">
+                <h5> </h5>
+                <input type="text" value="2" id="idle" name="idle"><br>idle timer<br>
+                <input type="text" value="2" id="pause" name="pause"><br>Pause timer<br>
+            </div>
+            <div class=" col-md-2"></div>
+        </div>
+    </div>
+    
+    <!--div class="container-lg">
+        <div class="box bg-1">
+            <div class=" col-md-1"></div>
+            <div class="col-md-4">
+                <h5>ROS-Launch Manual Controls:</h5>
+                <p> </p>
+                <h5><i class="fa fa-smile-o" aria-hidden="true" style="font-size:36px; color: green"></i> 
+                    &nbsp;Anxiety&nbsp;
+                    <i class="fa fa-meh-o" aria-hidden="true" style="font-size:36px; color: yellow"></i>
+                    &nbsp;Perception&nbsp;
+                    <i class="fa fa-frown-o" aria-hidden="true" style="font-size:36px; color: red"></i>
+                </h5>
+                <input type="range" min="0" max="100" class="form-range" id="anxiety-level" onchange="onchange_anxiety(this.value)">
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <h5> </h5>
+                <p> </p>
+                <button onclick="launch_run()" type="button" class="btn btn-outline-danger btn-lg">Launch Run</button>
+                <button onclick="launch_kill()" type="button" class="btn btn-outline-success btn-lg">Launch Stop</button>
+                <p> </p>
+                <div class="dropup">
+                    <button class="btn btn-secondary dropdown-toggle btn-lg" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        Run Pre-scripted Behaviors
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu2">
+                        <li><button onclick="behavior_nao('arm_dance/arm_dance')" class="dropdown-item" type="button">Arm Dance</button></li>
+                        <li><button onclick="behavior_nao('macarena_2/behavior_1')" class="dropdown-item" type="button">Macarena</button></li>
+                        <li><button onclick="behavior_nao('gangnam/behavior_1')" class="dropdown-item" type="button">Gangnam Style</button></li>
+                        <li><button onclick="behavior_nao('thriller/behavior_1')" class="dropdown-item" type="button">Thriller</button></li>
+                        <li><button onclick="behavior_nao('saxophone/behavior_1')" class="dropdown-item" type="button">Saxophone</button></li>
+                        <li><button onclick="behavior_nao('animations/Stand/Waiting/AirGuitar_1')" class="dropdown-item" type="button">Guitar</button></li>
+                        <li><button onclick="behavior_nao('taichi/taichi')" class="dropdown-item" type="button">Taichi</button>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div-->
+
+    <div class="container-lg">
+        <div class="box bg-4">
+            <div class=" col-md-7">
+                <p>Using AI-Enhanced Social Robotics to Improve Children's Healthcare Experiences. 
+                This work is funded by the ESRC/SSHRC Canada-UK Artificial Intelligence Initiative through grant ES/T012986/1
+                (uk-canada-contact@glasgow.ac.uk)
+                </p>
+            </div>
+            <div class=" col-md-1"></div>
+            <div class=" col-md-4">
+                <p></p>
+                <button onclick="save_config()" type="button" class="btn btn-dark">Stop and Save Config &raquo;</button>
+                <a id="go_dashboard" role="button" class="btn btn-light" href="main_interaction.html">Go to Dashboard &raquo;</a>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../scripts/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="../bootstrap-5.1.3/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  </body>
+  <script src="../scripts/roslib.min.js"></script>
+  <script src="../scripts/eventemitter2.min.js"></script>
+  <script src="../scripts/config_manager.js"></script> 
+</html>

@@ -1,10 +1,17 @@
 <launch>
+  <arg name="jet_ip" default="10.42.0.1"/>
+  <arg name="machine_name" default="tobojetuk"/>
   <arg name="run_naoqi_driver"  default="true"/>
-    
+  
   <include file="$(find tobouk_core)/launch/tobo_core.launch">
     <arg name="run_naoqi_driver" value="$(arg run_naoqi_driver)"/>
   </include>
   
   <include file="$(find tobo_planner)/launch/tobo_planner.launch"/>
+  
+  <include file="$(find tobouk_web_gui)/launch/tobouk_web_perception.launch">
+      <arg name="jet_ip" default="$(arg jet_ip)"/>
+      <arg name="machine_name" default="$(arg machine_name)"/>
+  </include>
     
 </launch>

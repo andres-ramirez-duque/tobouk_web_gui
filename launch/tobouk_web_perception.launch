@@ -1,0 +1,38 @@
+<launch>
+  <arg name="jet_ip" default="10.42.0.1"/>
+  <arg name="machine_name" default="tobojetuk"/>
+  
+  <machine name="$(arg machine_name)" address="$(arg jet_ip)" env-loader="/opt/ros/melodic/env_tobojetuk.sh" default="false" user="$(arg machine_name)"/>
+  
+  <arg name="ros_hz" default="7.0"/>
+  <arg name="os_display" default="true"/>
+  <arg name="src_zed_gst" default="false"/>
+
+  <arg name="face_frame_id" default="face_frame"/>
+  <arg name="focus_frame_id" default="focus_frame"/>
+  <arg name="camera_frame_id" default="zed2_camera_center"/>
+  <arg name="world_frame_id" default="world"/>
+  
+  <param name="zed_resolution" value="1.0"/>
+
+  <param name="configs_path" value="/home/$(arg machine_name)/catkin_ws/src/tobo_perception"/>
+  
+  <param name="os_display" value="$(arg os_display)"/>
+  <param name="ros_hz" value="$(arg ros_hz)"/>
+  <param name="src_zed_gst" value="$(arg src_zed_gst)"/>
+  <param name="focus_frame_id" value="$(arg focus_frame_id)"/>
+  
+  <!-- Static transforms Enviroment setup -->
+  <include file="$(find tobouk_web_gui)/launch/scenario_calib.launch">
+      <arg name="machine_name" default="$(arg machine_name)"/>
+  </include>
+
+  <node machine="$(arg machine_name)" pkg="tobo_perception" type="perceptionstream_node" name="perceptionstream_node" output="screen">
+  </node>
+  
+  <node machine="$(arg machine_name)" pkg="tobo_perception" type="focus_estimation" name="focus_estimation_node" output="screen">
+  </node>
+
+</launch>
+
+<!-- roslaunch tobo_perception tobo_perception.launch os_display:=true ros_hz:=10.0 src_zed_gst:=true numFaciallandmarks:=80.0 src_file:=false -->

@@ -1,0 +1,12 @@
+<launch>
+  <arg name="rasp_ip" default="10.42.0.254"/>
+  <arg name="jet_ip" default="10.42.0.1"/>
+  
+  <machine name="tobojetuk" address="$(arg jet_ip)" env-loader="/opt/ros/melodic/env_tobojetuk.sh" default="false" user="tobojetuk"/>
+  
+  <rosparam command="load" file="$(find tobo_planner)/planning_service/model0.9/state_frames_scenario.yaml"/>
+   
+  <node name="zed_gst_receiver" pkg="tobouk_web_gui" type="zed_gst_receiver_cmd" args="$(find tobouk_web_gui)/web_gui/hlstest $(arg rasp_ip)"/>
+  
+  <node machine="tobojetuk" name="zed_gst_sender" pkg="tobo_perception" type="zed_gst_sender_cmd" args="$(arg rasp_ip)"/>
+</launch>

@@ -10,7 +10,7 @@ void callback_run(std_msgs::String msg){
         ss << "roslaunch " << msg.data << " &";
         std::system(ss.str().c_str());
         running = true; //Refuse new launch
-        ROS_INFO_STREAM("launched : roslaunch" << msg.data);
+        ROS_INFO_STREAM("launched : roslaunch " << msg.data);
     }
     else{
         ROS_ERROR("A process is already running.");
