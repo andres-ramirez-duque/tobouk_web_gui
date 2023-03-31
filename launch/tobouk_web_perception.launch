@@ -5,7 +5,7 @@
   <machine name="$(arg machine_name)" address="$(arg jet_ip)" env-loader="/opt/ros/melodic/env_tobojetuk.sh" default="false" user="$(arg machine_name)"/>
   
   <arg name="ros_hz" default="7.0"/>
-  <arg name="os_display" default="true"/>
+  <arg name="os_display" default="false"/>
   <arg name="src_zed_gst" default="false"/>
 
   <arg name="face_frame_id" default="face_frame"/>

@@ -1,4 +1,3 @@
-var ros_IP;
 var ros;
 var launch_run_pub;
 var launch_msg;
@@ -10,15 +9,12 @@ var t_idle;
 var t_pause
 var t_query_response;
 
-var url = "http://10.42.0.254:4200";
-var input   = document.getElementById("input");
-var iframe  = document.getElementById("shell");
-var output  = document.getElementById("output");
-var session = document.getElementById("session");
-
 var video = document.getElementById('video');
 
-let winObj = null;
+var ros_IP = sessionStorage.getItem('ros_IP');;
+var url = "http://"+ros_IP+":4200/";
+
+let winObj = window.parent;
 		
 function start_video() {
     console.log('Starting video testing');
@@ -28,7 +24,8 @@ function start_video() {
 				      data : 'roslaunch tobouk_web_gui tobouk_web_config.launch\n'
 		});
 		
-		winObj.postMessage(message, url);
+		//winObj.postMessage(message, url);
+    winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
     
     if (Hls.isSupported()) {
         var hls = new Hls();
@@ -43,7 +40,7 @@ function start_video() {
         hls.attachMedia(video);
         setTimeout(() => {
         hls.loadSource('../hlstest/playlist.m3u8');
-        },10000);
+        },12000);
     }
     else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = '../hlstest/playlist.m3u8';
@@ -61,15 +58,10 @@ function save_config() {
 		  data : '\u0003'
 		});
 		
-		winObj.postMessage(message, url);
-			      
-    naoqi = document.getElementById('naoqi_switch').checked;
-    sessionStorage.setItem('naoqi', naoqi);
-    console.log(sessionStorage.getItem('naoqi'));
+		winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+}
 
-    ros_IP = document.getElementById("ros_ip").value;
-    sessionStorage.setItem('ros_IP',ros_IP);
-
+function onChange_config() {
     t_doactivity = document.getElementById("doactivity").value;
     sessionStorage.setItem('t_doactivity',t_doactivity);
     
@@ -83,31 +75,12 @@ function save_config() {
     sessionStorage.setItem('t_pause',t_pause);
 
     console.log('Config features saved: ');
-    
-    setTimeout(() => {
-    var message = JSON.stringify({
-				      type : 'input',
-				      data : 'roslaunch tobouk_web_gui tobouk_web_gui.launch\n'
-	  });
-		winObj.postMessage(message, url);
-    },5000);
 }
-//iframe.src = url;
 
 window.onload = function () {
-    winObj = window.open(url,'_blank');
-    setTimeout(() => {
-    var message = JSON.stringify({
-				      type : 'input',
-				      data : 'toboraspuk\n'
-	  });
-		winObj.postMessage(message, url);
-    },500);
-    setTimeout(() => {
-    var message = JSON.stringify({
-				      type : 'input',
-				      data : 'tobo2021\n'
-	  });
-		winObj.postMessage(message, url);
-    },500);
+    var temp_url = winObj.document.getElementById("shell").src; 
+    
+    if (temp_url !== url){
+      winObj.document.getElementById("shell").src = url;
+    }
 }

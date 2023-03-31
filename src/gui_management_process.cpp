@@ -18,15 +18,24 @@ void callback_run(std_msgs::String msg){
 }
 
 void callback_kill(std_msgs::Empty msg){
-    if(running){
-        std::stringstream ss;
-        ss << "rosnode list | egrep -v 'rosout|rosbridge|rosapi|management' | xargs rosnode kill";
-        std::system(ss.str().c_str());
-        running = false;  //accept a new launch
-        ROS_INFO("Killed process");
+    
+    ros::V_string nodes;
+    if ( ! ros::master::getNodes(nodes) ) {
+      return;
     }
-    else{
-        ROS_ERROR("No Process are running.");
+
+    if (nodes.size() > 4){
+    
+      if(running){
+          std::stringstream ss;
+          ss << "rosnode list | egrep -v 'rosout|rosbridge|rosapi|management' | xargs rosnode kill";
+          std::system(ss.str().c_str());
+          running = false;  //accept a new launch
+          ROS_INFO("Killed process");
+      }
+      else{
+          ROS_ERROR("No Process are running.");
+      }
     }
 }
 

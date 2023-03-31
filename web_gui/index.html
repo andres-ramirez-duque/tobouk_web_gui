@@ -1,120 +1,113 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <title>UK-Canada AI Project</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Andres Ramirez, Alan Linsay">
-    <meta name="description" content="UK-Canada Project main interface">
- 
-    <link rel="shortcut icon" type="image" href="favicon.ico">
-    <link rel="stylesheet" type="text/css" href="css/base.css"/>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="bootstrap-5.1.3/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="bootstrap-5.1.3/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <script src="scripts/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+<!DOCTYPE HTML>
+<html>
+<head>
+	<style>
+		p {
+			font-size:	1.1em;
+		}
+		#output, #active_page {
+			width:		920px;
+			height:		850px;
+			margin: 	5px 10px;
+			padding:    0px;
+			border:     0px
+		}
+		#shell  {
+			width:		920px;
+			height:		100px;
+			margin: 	5px 10px;
+			padding:    0px;
+			border:     0px;
+			overflow:	scroll;
+		}
+	</style>
+</head>
+<body>
+	<iframe id="active_page" name="ActivePage" src="about:blank"></iframe>
+	<iframe id="shell" name="myShell" src="about:blank"></iframe>
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .b-example-divider {
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-      }
-
-      .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 100vh;
-      }
-
-      .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-      }
-
-      .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-      }
-
-      .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
-    </style>
-
+	<script>
+	  var ros_IP = "10.42.0.254";
+	  var naoqi= false;
+	  var t_doactivity = '5';
+    var t_idle = '5';
+    var t_pause = '5';
+    var t_query_response = '5';
+    var jet_name = 'tobojetuk';
+    var rasp_name = 'toboraspuk';
+    var rasp_pass = 'tobo2021';
+    var passphrase = 'tobo2023';
+    var jet_IP = '10.42.0.1'; 
+	  
+		var url = "htmls/main.html";
+		var shell_url = "http://"+ros_IP+":4200";
     
-    <!-- Custom styles for this template -->
-    <link href="css/navbar-top-fixed.css" rel="stylesheet">
-  </head>
-  <body>
+    sessionStorage.setItem('ros_IP',ros_IP);
+    sessionStorage.setItem('jet_IP',jet_IP);
+    sessionStorage.setItem('jet_name',jet_name);
+    sessionStorage.setItem('rasp_name',rasp_name);
+    sessionStorage.setItem('naoqi', naoqi);
+    sessionStorage.setItem('t_doactivity',t_doactivity);
+    sessionStorage.setItem('t_query_response',t_query_response);
+    sessionStorage.setItem('t_idle',t_idle);
+    sessionStorage.setItem('t_pause',t_pause);
     
-    <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color: #003865;">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">UK-Canada AI Project</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="htmls/main_interaction.html">Interaction Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="htmls/config.html">Config System</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+		// Receive response from shellinabox
+		window.addEventListener("message", function(message) {
+			// Allow messages only from shellinabox
+			if (message.origin !== shell_url) {
+				return;
+			}
 
-    <main class="container">
-      <div class="bg-light p-5 rounded">
-        <h1>Welcome to UK-Canada Project Main Interface</h1>
-        <p class="lead">The aim of this project is to help children cope with potentially painful and distressing medical procedures in the hospital emergency department. In recent years, social robots have also been tested in this area, with promising initial results.</p>
-        <p class="lead">This web interface provides access to the main configuration and control windows that allow implementing a social robot intervention in the ED ecosystem. Let's do it</p>
-        <a class="btn btn-lg btn-primary" href="htmls/config.html" role="button">Config &raquo;</a>
-        <a class="btn btn-lg btn-primary" href="htmls/main_interaction.html" role="button">Dashboard &raquo;</a>
-      </div>
-    </main>
+			// Handle response according to response type
+			var decoded = JSON.parse(message.data);
+			
+			switch (decoded.type) {
+			case "ready":
+				// Shellinabox is ready to communicate and we will enable console output
+				// by default.
+				var message = JSON.stringify({
+					type : 'output',
+					data : 'enable'
+				});
+				shell.contentWindow.postMessage(message, shell_url);
+				break;
+			case "output" :
+				// Append new output
+				//console.log('Data = ' + decoded.data+'\n');
+				if (decoded.data == rasp_name+'-desktop login: '){
+				  var message = JSON.stringify({
+				      type : 'input',
+				      data : rasp_name+'\n'
+	        });
+		      shell.contentWindow.postMessage(message, shell_url);
+				}
+				if (decoded.data == 'Password: '){
+				  var message = JSON.stringify({
+				      type : 'input',
+				      data : rasp_pass+'\n'
+	        });
+		      shell.contentWindow.postMessage(message, shell_url);
+				}
+				if (decoded.data == 'Enter passphrase for /home/'+rasp_name+'/.ssh/id_rsa: '){
+				  var message = JSON.stringify({
+				      type : 'input',
+				      data : passphrase+'\n'
+	        });
+		      shell.contentWindow.postMessage(message, shell_url);
+				}
+				break;
+			case "session" :
+				// Reload session status
+				session.innerHTML = 'Session status: ' + decoded.data;
+				break;
+			}
+		}, false);
 
-    <div class="container-fluid">
-      <div class="box bg-4">
-          <div class=" col-md-8">
-              <p>Using AI-Enhanced Social Robotics to Improve Children's Healthcare Experiences. 
-              This work is funded by the ESRC/SSHRC Canada-UK Artificial Intelligence Initiative through grant ES/T012986/1
-              (uk-canada-contact@glasgow.ac.uk)
-              </p>
-          </div>
-          <div class=" col-md-4"></div>
-      </div>
-    </div>
-  </body>
+		// Add url to our iframe after the event listener is installed.
+		active_page.src = url;
+
+	</script>
+
+</body>
 </html>

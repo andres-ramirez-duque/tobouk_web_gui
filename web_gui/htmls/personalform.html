@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>UK-Canada AI Project</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Andres Ramirez, Alan Linsay">
+    <meta name="description" content="UK-Canada Project main interface">
+    <link rel="stylesheet" type="text/css" href="../css/base.css"/>
+    <link rel="shortcut icon" type="image" href="../favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../bootstrap-5.1.3/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="../css/navbar-top-fixed.css" rel="stylesheet">
+  </head>
+  
+  <body>
+    <script src="../scripts/hls.js"></script>
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color: #003865;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="main.html">UK-Canada AI Project</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="main_interaction.html">Interaction Dash Board</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="personalform.html">Personalization Form</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="config.html">Config System</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <div class="container-lg">
+        <div class="box bg-4">
+            <div class=" col-md-1"></div>
+            <div class=" col-md-5">
+                <h3>Personalized Interaction Form</h3>
+                <h3><small class="text-muted">Web TOBO GUI</small></h3>
+            </div>
+            <div class=" col-md-2">
+            </div>
+            <div class=" col-md-3">
+            </div>
+            <div class=" col-md-1"></div>
+        </div>
+    </div>
+    
+    <div class="container-lg">
+        <div class="box bg-2">
+            <div class=" col-md-1"></div>
+            <div class="col-md-4">
+                <form>    
+                    <label for="inputname" class="form-label">Child Name</label>
+                    <input type="text" id="inputname" class="form-control" aria-describedby="nameHelpBlock">
+                    <p></p>
+                    <label for="selectage" class="form-label">Child's Age Range</label>
+                    <select id="selectage" class="form-select"  aria-describedby="ageHelpBlock">
+                        <option selected>Select the child's age ranges</option>
+                        <option value="true">Younger child (5-8)</option>
+                        <option value="false">Older child (9-12)</option>
+                    </select>
+                    <div id="ageHelpBlock" class="form-text">These data will be used only to personalize some stages of the interaction..</div>
+                </form>
+            </div>
+            <div class=" col-md-1"></div>
+            <div class="col-md-4">
+                <form>
+                    <label for="selectgender" class="form-label">Child's Gender</label>
+                    <select id="selectgender" class="form-select"  aria-describedby="genderHelpBlock">
+                        <option selected>Select the child's gender</option>
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                        <option value="NA">NA</option>
+                    </select>
+                    <p></p>
+                    <label for="selectcolor" class="form-label">Child's favorite Color</label>
+                    <select id="selectcolor" class="form-select"  aria-describedby="colorHelpBlock">
+                        <option selected>Select the child's favorite color</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                        <option value="red">Red</option>
+                        <option value="white">White</option>
+                        <option value="purple">Purple</option>
+                        <option value="orange">Orange</option>
+                    </select>
+                </form>   
+            </div>
+            <div class=" col-md-1"></div>
+        </div>
+        <div class="box bg-1">
+            <div class=" col-md-1"></div>
+            <div class="col-md-4">
+                <form>    
+                    <label for="selectbreathing" class="form-label">Breathing Action</label>
+                    <select id="selectbreathing" class="form-select"  aria-describedby="breathingHelpBlock">
+                        <option selected>Select a breathing exercise</option>
+                        <option value="belly">Belly breathing</option>
+                        <option value="cookies">Smelling cookies</option>
+                        <option value="chocolate">Making hot chocolate</option>
+                    </select>
+                    <p></p>
+                    <label for="selectrelaxing" class="form-label">Relaxing Action</label>
+                    <select id="selectrelaxing" class="form-select"  aria-describedby="relaxingHelpBlock">
+                        <option selected>Select a relaxing activity</option>
+                        <option value="taichi">Taichi</option>
+                        <option value="relax_song">Relaxing song</option>
+                    </select>
+                    <p></p>
+                    <label for="selectmagic" class="form-label">Highly Diverting Action</label>
+                    <select id="selectmagic" class="form-select"  aria-describedby="magicHelpBlock">
+                        <option selected>Select a higly diverting activity</option>
+                        <option value="bruno">We don't talk about bruno dance</option>
+                        <option value="look">Made you look dance</option>
+                        <option value="bam">Bam Bam dance</option>
+                        <option value="shakeit">Shake it off dance</option>
+                        <option value="macarena">Macarena dance</option>
+                        <option value="armdance">Arm dance</option>
+                        <option value="happy">Happy song (Pharell W.)</option>
+                        <option value="calmdown">Calm Down song</option>
+                        <option value="babyshark">Baby Shark song</option>
+                        <option value="oldmacdonald">Old MacDonald song</option>
+                        <option value="saxophone">Saxophone performance</option>
+                        <option value="guitar">Guitar performance</option>
+                    </select>
+                </form>
+            </div>
+            <div class=" col-md-1"></div>
+            <div class="col-md-4">
+                <form>
+                    <label for="selectrewarding" class="form-label">Rewarding Action</label>
+                    <select id="selectrewarding" class="form-select"  aria-describedby="rewardingHelpBlock">
+                        <option selected>Select a rewarding activity</option>
+                        <option value="bruno">We don't talk about bruno dance</option>
+                        <option value="look">Made you look dance</option>
+                        <option value="bam">Bam Bam dance</option>
+                        <option value="shakeit">Shake it off dance</option>
+                        <option value="macarena">Macarena dance</option>
+                        <option value="armdance">Arm dance</option>
+                        <option value="happy">Happy song (Pharell W.)</option>
+                        <option value="calmdown">Calm Down song</option>
+                        <option value="babyshark">Baby Shark song</option>
+                        <option value="oldmacdonald">Old MacDonald song</option>
+                        <option value="saxophone">Saxophone performance</option>
+                        <option value="guitar">Guitar performance</option>
+                    </select>
+                    <p></p>
+                    <label for="selectdance" class="form-label">Diverting Dance Action</label>
+                    <select id="selectdance" class="form-select"  aria-describedby="danceHelpBlock">
+                        <option selected>Select a distracting dance</option>
+                        <option value="bruno">We don't talk about bruno dance</option>
+                        <option value="look">Made you look dance</option>
+                        <option value="bam">Bam Bam dance</option>
+                        <option value="shakeit">Shake it off dance</option>
+                        <option value="macarena">Macarena dance</option>
+                        <option value="armdance">Arm dance</option>
+                        <option value="happy">Happy song (Pharell W.)</option>
+                        <option value="calmdown">Calm Down song</option>
+                        <option value="babyshark">Baby Shark song</option>
+                        <option value="oldmacdonald">Old MacDonald song</option>
+                        <option value="saxophone">Saxophone performance</option>
+                        <option value="guitar">Guitar performance</option>
+                    </select>
+                    <p></p>
+                    <label for="selectsong" class="form-label">Diverting Song Action</label>
+                    <select id="selectsong" class="form-select"  aria-describedby="songHelpBlock">
+                        <option selected>Select a distracting song</option>
+                        <option value="bruno">We don't talk about bruno dance</option>
+                        <option value="look">Made you look dance</option>
+                        <option value="bam">Bam Bam dance</option>
+                        <option value="shakeit">Shake it off dance</option>
+                        <option value="macarena">Macarena dance</option>
+                        <option value="armdance">Arm dance</option>
+                        <option value="happy">Happy song (Pharell W.)</option>
+                        <option value="calmdown">Calm Down song</option>
+                        <option value="babyshark">Baby Shark song</option>
+                        <option value="oldmacdonald">Old MacDonald song</option>
+                        <option value="saxophone">Saxophone performance</option>
+                        <option value="guitar">Guitar performance</option>
+                    </select>
+                </form>   
+            </div>
+            <div class=" col-md-1"></div>
+        </div>
+    </div>
+
+    <div class="container-lg">
+        <div class="box bg-4">
+            <div class=" col-md-7">
+                <p>Using AI-Enhanced Social Robotics to Improve Children's Healthcare Experiences. 
+                This work is funded by the ESRC/SSHRC Canada-UK Artificial Intelligence Initiative through grant ES/T012986/1
+                (uk-canada-contact@glasgow.ac.uk)
+                </p>
+            </div>
+            <div class=" col-md-1"></div>
+            <div class=" col-md-4">
+                <p></p>
+                <a id="go_dashboard" onclick="save_form()" role="button" class="btn btn-light" href="main_interaction.html">Go to Dashboard &raquo;</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        var ros_IP = sessionStorage.getItem('ros_IP');
+        var url = "http://"+ros_IP+":4200/";
+        let winObj = window.parent;
+        var temp_url = winObj.document.getElementById("shell").src; 
+    
+        if (temp_url !== url){
+            winObj.document.getElementById("shell").src = url;
+        }
+        function save_form() {
+            var breathing = document.getElementById("selectbreathing").value;
+            var relaxing = document.getElementById("selectrelaxing").value;
+            var magic = document.getElementById("selectmagic").value;
+            var rewarding = document.getElementById("selectrewarding").value;
+            var dance = document.getElementById("selectdance").value;
+            var song = document.getElementById("selectsong").value;
+            var message = JSON.stringify({
+				      type : 'input',
+				      data : 'python catkin_ws/src/tobouk_web_gui/scripts/personalactions.py '+breathing+' '+relaxing+' '+magic+' '+rewarding+' '+dance+' '+song+'\n'
+		    });
+            winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+            
+            console.log('Starting save form funtion');
+            sessionStorage.setItem('child_name', document.getElementById('inputname').value);
+            sessionStorage.setItem('child_gender', document.getElementById('selectgender').value);
+            sessionStorage.setItem('child_color', document.getElementById('selectcolor').value);
+            sessionStorage.setItem('is_younger_child', document.getElementById('selectage').value);
+        }
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../scripts/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="../bootstrap-5.1.3/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  </body>
+  <script src="../scripts/roslib.min.js"></script>
+  <script src="../scripts/eventemitter2.min.js"></script>
+  <script src="../scripts/config_manager.js"></script> 
+</html>

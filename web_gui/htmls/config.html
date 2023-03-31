@@ -20,7 +20,7 @@
     <script src="../scripts/hls.js"></script>
     <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color: #003865;">
         <div class="container-fluid">
-          <a class="navbar-brand" href="../index.html">UK-Canada AI Project</a>
+          <a class="navbar-brand" href="main.html">UK-Canada AI Project</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -28,6 +28,9 @@
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="main_interaction.html">Interaction Dash Board</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="personalform.html">Personalization Form</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link disabled" href="config.html">Config System</a>
@@ -92,14 +95,14 @@
             <div class=" col-md-2"></div>
             <div class=" col-md-3">
                 <h5>Planner Timeouts in (s)</h5>
-                <input type="text" value="2" id="doactivity" name="doactivity"><br>Do activity timer<br>
-                <input type="text" value="2" id="query_response" name="query_response"><br>Query response timer<br>
+                <input type="text" value="2" id="doactivity" onChange="onChange_config()" name="doactivity"><br>Do activity timer<br>
+                <input type="text" value="2" id="query_response" onChange="onChange_config()" name="query_response"><br>Query response timer<br>
             </div>
             <div class=" col-md-2"></div>
             <div class=" col-md-3">
                 <h5> </h5>
-                <input type="text" value="2" id="idle" name="idle"><br>idle timer<br>
-                <input type="text" value="2" id="pause" name="pause"><br>Pause timer<br>
+                <input type="text" value="2" id="idle" onChange="onChange_config()" name="idle"><br>idle timer<br>
+                <input type="text" value="2" id="pause" onChange="onChange_config()" name="pause"><br>Pause timer<br>
             </div>
             <div class=" col-md-2"></div>
         </div>

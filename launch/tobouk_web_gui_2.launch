@@ -1,0 +1,18 @@
+<launch>
+  <arg name="topics_glob" default="[*]" />
+  <arg name="services_glob" default="[*]" />
+  <arg name="params_glob" default="[*]" />
+    
+  <node name="gui_management_process" pkg="tobouk_web_gui" type="gui_management_node" output="screen"/>
+  
+  <node name="py_server_launch" pkg="tobouk_web_gui" type="py_server_launch" args="$(find tobouk_web_gui)/web_gui"/>
+  
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+    <arg name="topics_glob" value="$(arg topics_glob)"/>
+    <arg name="services_glob" value="$(arg services_glob)"/>
+    <arg name="params_glob" value="$(arg params_glob)"/>
+  </include>
+    
+  <rosparam command="load" file="$(find tobo_planner)/planning_service/model0.9/state_frames_scenario.yaml"/>
+  
+</launch>

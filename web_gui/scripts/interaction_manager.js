@@ -6,7 +6,6 @@ var request_sub;
 var launch_run_pub;
 var launch_kill_pub;
 var run_naoqi_driver = 'true';
-var ros_IP = "192.168.42.1";
 var ros;
 var proc_stage;
 var ok_anxiety;
@@ -27,6 +26,12 @@ var p_step;
 var stopNaoClient;
 var stop_request;
 var mybandera = false;
+
+var ros_IP = sessionStorage.getItem('ros_IP');
+var jet_IP = sessionStorage.getItem('jet_IP');
+var jet_name = sessionStorage.getItem('jet_name');
+var url = "http://"+ros_IP+":4200/";
+let winObj = window.parent;
 
 requestModalEl.addEventListener('show.bs.modal', function (event) {
     var request_msg = document.getElementById('request_msg')
@@ -51,8 +56,6 @@ function ros_connect() {
     forEachButton(b => b.removeAttribute("disabled"));
     document.getElementById("ros_connect").setAttribute("disabled","disabled");
     
-
-    ros_IP = sessionStorage.getItem('ros_IP');
     // Init handle for rosbridge_websocket
     ros = new ROSLIB.Ros({
         url: "ws://" + ros_IP + ":9090"
@@ -235,6 +238,19 @@ function launch_run() {
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",10)
     document.getElementById("procedure_progress").textContent = "-----> "
     
+    var message = JSON.stringify({
+				      type : 'input',
+				      data : 'ssh '+jet_name+'@'+jet_IP+'\n'
+		});
+    winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+    
+    setTimeout(()=> {
+    var message = JSON.stringify({
+				      type : 'input',
+				      data : "roslaunch tobo_perception tobo_perception.launch os_display:=false\n"
+		});
+    winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+    },1000);
     set_personalized_form();
 }
 function launch_kill() {
@@ -242,6 +258,13 @@ function launch_kill() {
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)
     document.getElementById("ros_status").innerHTML = "<span style='color: red;'>Stopped</span>";
     launch_kill_pub.publish();
+    setTimeout(()=> {
+    var message = JSON.stringify({
+				      type : 'input',
+				      data : "exit\n"
+		});
+    winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+    },2000);
 }
 
 function behavior_nao(nao_behavior) {
@@ -268,16 +291,6 @@ function pub_request(msg) {
     request_pub.publish(requested_msg);
     console.log('Requested response: ' + requested_msg.parameters);
 }
-function onchange_anxiety(anxiety_val) {
-    if(anxiety_val<60){
-        ok_anxiety.set('true');
-        console.log('ok_anxiety set to True');
-    }
-    else{
-        ok_anxiety.set('false');
-        console.log('ok_anxiety set to False');
-    }
-}
 function forEachButton(func) {
     let elements = document.getElementsByTagName("button");
     for(let i = 0, len = elements.length; i < len; i++) {
@@ -285,21 +298,15 @@ function forEachButton(func) {
     }
 }
 function set_personalized_form(){
-    child_name.set(document.getElementById('inputname').value);
-    child_gender.set(document.getElementById('selectgender').value);
-    child_color.set(document.getElementById('selectcolor').value);
-    is_younger_child.set(document.getElementById('selectage').value)
+    child_name.set(sessionStorage.getItem('child_name'));
+    child_gender.set(sessionStorage.getItem('child_gender'));
+    child_color.set(sessionStorage.getItem('child_color'));
+    is_younger_child.set(sessionStorage.getItem('is_younger_child'));
 
     doactivity.set(parseInt(sessionStorage.getItem('t_doactivity')));
     query_response.set(parseInt(sessionStorage.getItem('t_query_response')));
     idle.set(parseInt(sessionStorage.getItem('t_idle')));
     pause.set(parseInt(sessionStorage.getItem('t_pause')));
-
-    console.log('Child Name set: ' + document.getElementById('inputname').value + '; Is Child Younger: ' + document.getElementById('selectage').value);
-    document.getElementById("inputname").setAttribute("disabled","disabled");
-    document.getElementById("selectgender").setAttribute("disabled","disabled");
-    document.getElementById("selectcolor").setAttribute("disabled","disabled");
-    document.getElementById("selectage").setAttribute("disabled","disabled");
 }
 //countdown
 function coundDown(countdown) {
@@ -321,6 +328,12 @@ function coundDown(countdown) {
 }
 
 window.onload = function () {
+    var temp_url = winObj.document.getElementById("shell").src; 
+    
+    if (temp_url !== url){
+      winObj.document.getElementById("shell").src = url;
+    }
+    
     document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)     
     forEachButton(b => b.setAttribute("disabled", "disabled"));

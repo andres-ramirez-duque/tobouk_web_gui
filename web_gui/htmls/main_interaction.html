@@ -19,7 +19,7 @@
   <body>
     <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color: #003865;">
         <div class="container-fluid">
-          <a class="navbar-brand" href="../index.html">UK-Canada AI Project</a>
+          <a class="navbar-brand" href="main.html">UK-Canada AI Project</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -27,6 +27,9 @@
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
                 <a class="nav-link disabled" aria-current="page" href="htmls/main_interaction.html">Interaction Dash Board</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="personalform.html">Personalization Form</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" href="config.html">Config System</a>
@@ -42,11 +45,7 @@
                 <h3>UK-Canada AI Project</h3>
                 <h3><small class="text-muted">Web TOBO GUI</small></h3>
             </div>
-            <div class=" col-md-4">
-                <legend>Personalized interaction form</legend>
-                <!--label for="ros_ip">Ros Web IP:</label>
-                <input type="text" value="192.168.42.1" id="ros_ip" name="ros_ip"><br><br-->
-            </div>
+            <div class=" col-md-4"></div>
             <div class=" col-md-2">
                 <p> </p>
                 <button id="ros_connect"  onclick="ros_connect()" type="button" class="btn btn-light btn-lg"><i class="fa fa-rocket" aria-hidden="true" style="font-size:24px"></i></button>
@@ -56,49 +55,6 @@
     </div>
     
     <div class="container-lg">
-
-        <div class="box bg-2">
-            <div class=" col-md-1"></div>
-            <div class="col-md-4">
-                <form>    
-                    <label for="inputname" class="form-label">Child Name</label>
-                    <input type="text" id="inputname" class="form-control" aria-describedby="nameHelpBlock">
-                    <p></p>
-                    <label for="selectage" class="form-label">Child's Age Range</label>
-                    <select id="selectage" class="form-select"  aria-describedby="ageHelpBlock">
-                        <option selected>Select the child's age ranges</option>
-                        <option value="true">Younger child (5-8)</option>
-                        <option value="false">Older child (9-12)</option>
-                    </select>
-                    <div id="ageHelpBlock" class="form-text">These data will be used only to personalize some stages of the interaction..</div>
-                </form>
-            </div>
-            <div class=" col-md-1"></div>
-            <div class="col-md-4">
-                <form>
-                    <label for="selectgender" class="form-label">Child's Gender</label>
-                    <select id="selectgender" class="form-select"  aria-describedby="genderHelpBlock">
-                        <option selected>Select the child's gender</option>
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
-                        <option value="NA">NA</option>
-                    </select>
-                    <p></p>
-                    <label for="selectcolor" class="form-label">Child's favorite Color</label>
-                    <select id="selectcolor" class="form-select"  aria-describedby="colorHelpBlock">
-                        <option selected>Select the child's favorite color</option>
-                        <option value="green">Green</option>
-                        <option value="blue">Blue</option>
-                        <option value="red">Red</option>
-                        <option value="white">White</option>
-                        <option value="purple">Purple</option>
-                        <option value="orange">Orange</option>
-                    </select>
-                </form>   
-            </div>
-            <div class=" col-md-1"></div>
-    </div>
-
         <div class="box bg-1">
                 <div class=" col-md-2"></div>
                 <div class=" col-md-5">
