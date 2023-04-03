@@ -59,13 +59,13 @@
                 <div class=" col-md-2"></div>
                 <div class=" col-md-5">
                     <h4>ROS-Launch Control:</h4>
-                    <button onclick="launch_run()" type="button" class="btn btn-outline-danger btn-lg">Launch Run</button>
-                    <button onclick="launch_kill()" type="button" class="btn btn-outline-success btn-lg">Launch Stop</button>
+                    <button onclick="launch_run()" type="button" class="btn btn-outline-success btn-lg">Launch Run</button>
+                    <button onclick="launch_kill()" type="button" class="btn btn-outline-danger btn-lg">Launch Stop</button>
                 </div>
                 <div class=" col-md-3">
                     <div class="d-grid gap-2 justify-content-md-end">
-                        <button onclick="pause_nao()" type="button" class="btn btn-dark btn-lg">Pause NAO <i class="fa fa-pause" style="font-size:24px"></i></button>
-                        <button onclick="resume_nao()" type="button" class="btn btn-light btn-lg">Resume NAO <i class="fa fa-play" style="font-size:24px"></i></button>
+                        <button onclick="stop_nao()" type="button" class="btn btn-danger btn-lg">Stop NAO <i class="fa fa-pause" style="font-size:24px"></i></button>
+                        <button id="record" onclick="record_nao()" type="button" class="btn btn-secondary btn-lg">Record NAO <i class="fa fa-video-camera" style="font-size:24px"></i></button>
                     </div>
                 </div>
                 <div class=" col-md-2"></div>

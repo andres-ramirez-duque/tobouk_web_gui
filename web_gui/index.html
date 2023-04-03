@@ -27,31 +27,31 @@
 	<iframe id="shell" name="myShell" src="about:blank"></iframe>
 
 	<script>
-	  var ros_IP = "10.42.0.254";
-	  var naoqi= false;
-	  var t_doactivity = '5';
-    var t_idle = '5';
-    var t_pause = '5';
-    var t_query_response = '5';
-    var jet_name = 'tobojetuk';
-    var rasp_name = 'toboraspuk';
-    var rasp_pass = 'tobo2021';
-    var passphrase = 'tobo2023';
-    var jet_IP = '10.42.0.1'; 
-	  
-		var url = "htmls/main.html";
+		var ros_IP = "10.42.0.254";
+		var naoqi= false;
+		var t_doactivity = '5';
+		var t_idle = '5';
+		var t_pause = '5';
+		var t_query_response = '5';
+		var jet_name = 'tobojetuk';
+		var rasp_name = 'toboraspuk';
+		var rasp_pass = 'tobo2021';
+		var passphrase = 'tobo2023';
+		var jet_IP = '10.42.0.1'; 
+	  var recording_len = 35000;
+	  var url = "htmls/main.html";
 		var shell_url = "http://"+ros_IP+":4200";
     
-    sessionStorage.setItem('ros_IP',ros_IP);
-    sessionStorage.setItem('jet_IP',jet_IP);
-    sessionStorage.setItem('jet_name',jet_name);
-    sessionStorage.setItem('rasp_name',rasp_name);
-    sessionStorage.setItem('naoqi', naoqi);
-    sessionStorage.setItem('t_doactivity',t_doactivity);
-    sessionStorage.setItem('t_query_response',t_query_response);
-    sessionStorage.setItem('t_idle',t_idle);
-    sessionStorage.setItem('t_pause',t_pause);
-    
+		sessionStorage.setItem('ros_IP',ros_IP);
+		sessionStorage.setItem('jet_IP',jet_IP);
+		sessionStorage.setItem('jet_name',jet_name);
+		sessionStorage.setItem('rasp_name',rasp_name);
+		sessionStorage.setItem('naoqi', naoqi);
+		sessionStorage.setItem('t_doactivity',t_doactivity);
+		sessionStorage.setItem('t_query_response',t_query_response);
+		sessionStorage.setItem('t_idle',t_idle);
+		sessionStorage.setItem('t_pause',t_pause);
+    sessionStorage.setItem('recording_len',recording_len);
 		// Receive response from shellinabox
 		window.addEventListener("message", function(message) {
 			// Allow messages only from shellinabox

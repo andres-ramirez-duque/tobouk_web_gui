@@ -25,12 +25,14 @@ var r_type;
 var p_step;
 var stopNaoClient;
 var stop_request;
-var mybandera = false;
+var recordNaoClient;
+var record_request;
 
 var ros_IP = sessionStorage.getItem('ros_IP');
 var jet_IP = sessionStorage.getItem('jet_IP');
 var jet_name = sessionStorage.getItem('jet_name');
 var url = "http://"+ros_IP+":4200/";
+var recording_len = sessionStorage.getItem('recording_len');
 let winObj = window.parent;
 
 requestModalEl.addEventListener('show.bs.modal', function (event) {
@@ -195,6 +197,13 @@ function ros_connect() {
         planner_mode : 'stop',
         plan_step : 0
     });
+    recordNaoClient = new ROSLIB.Service({
+        ros : ros,
+        name : '/recording_service',
+        serviceType : 'std_srvs/Trigger'
+      });
+    record_request = new ROSLIB.ServiceRequest({
+    });
 }
 
 function ros_disconnect() {
@@ -206,19 +215,7 @@ function ros_disconnect() {
     command_sub.unsubscribe();
     ros.close();
 }
-function btn_param(procstage) {
-    if (mybandera){
-        requestModal.toggle(['Which of the following types of activities do you prefer?',['calm','active']]);
-        coundDown(10);
-    }else{
-        requestModal.toggle(['Are you ready to progress?',['Ready']]);
-        coundDown(-1);
-    }
-    mybandera = !mybandera
-    
-}
-
-function pause_nao() {
+function stop_nao() {
     stopNaoClient.callService(stop_request, function(result) {
         console.log('Result for service call on '
           + stopNaoClient.name
@@ -226,9 +223,22 @@ function pause_nao() {
           + result.planner_ok);
     });
 }
-
-function resume_nao() {
-    console.log('NAO Behavior resumed');
+function record_nao() {
+    recordNaoClient.callService(record_request, function(result) {
+        console.log('recording service toggle on: '
+          + result.success);
+    });
+    document.getElementById("record").setAttribute("disabled","disabled");
+    setTimeout(()=> {
+    recordNaoClient.callService(record_request, function(result) {
+        console.log('recording service toggle off: '
+          + result.success);
+    });
+    document.getElementById("record").removeAttribute("disabled");    
+    },recording_len);
+    /*nao_behavior_msg = new ROSLIB.Message({
+        speech_cmd: "^call(ALBehaviorManager.runBehavior(\"" + nao_behavior + "\"))"
+    });*/
 }
 function launch_run() {
     document.getElementById("ros_status").innerHTML = "<span style='color: green;'>Running</span>";
@@ -265,14 +275,6 @@ function launch_kill() {
 		});
     winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
     },2000);
-}
-
-function behavior_nao(nao_behavior) {
-    nao_behavior_msg = new ROSLIB.Message({
-        speech_cmd: "^call(ALBehaviorManager.runBehavior(\"" + nao_behavior + "\"))"
-    });
-    speech_pub.publish(nao_behavior_msg);
-    console.log('NAO Behavior Running:' + nao_behavior_msg.speech_cmd);
 }
 function pub_request(msg) {
     requestModal.hide();
