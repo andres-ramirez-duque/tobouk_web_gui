@@ -52,7 +52,7 @@
                 <label for="ros_ip">Ros Web IP:</label>
                 <input type="text" value="10.42.0.254" id="ros_ip" name="ros_ip"><br><br>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="naoqi_switch" checked>
+                    <input class="form-check-input" type="checkbox" role="switch" id="naoqi_switch" onChange="onChange_config('switch')">
                     <label class="form-check-label" for="flexSwitchCheckChecked">Run the system with NAO</label>
                 </div>
             </div>
@@ -95,14 +95,14 @@
             <div class=" col-md-2"></div>
             <div class=" col-md-3">
                 <h5>Planner Timeouts in (s)</h5>
-                <input type="text" value="2" id="doactivity" onChange="onChange_config()" name="doactivity"><br>Do activity timer<br>
-                <input type="text" value="2" id="query_response" onChange="onChange_config()" name="query_response"><br>Query response timer<br>
+                <input type="text" value="2" id="doactivity" onChange="onChange_config('doactivity')" name="doactivity"><br>Do activity timer<br>
+                <input type="text" value="2" id="query_response" onChange="onChange_config('query_response')" name="query_response"><br>Query response timer<br>
             </div>
             <div class=" col-md-2"></div>
             <div class=" col-md-3">
                 <h5> </h5>
-                <input type="text" value="2" id="idle" onChange="onChange_config()" name="idle"><br>idle timer<br>
-                <input type="text" value="2" id="pause" onChange="onChange_config()" name="pause"><br>Pause timer<br>
+                <input type="text" value="2" id="idle" onChange="onChange_config('idle')" name="idle"><br>idle timer<br>
+                <input type="text" value="2" id="pause" onChange="onChange_config('pause')" name="pause"><br>Pause timer<br>
             </div>
             <div class=" col-md-2"></div>
         </div>

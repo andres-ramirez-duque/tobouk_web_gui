@@ -243,6 +243,7 @@ function record_nao() {
 function launch_run() {
     document.getElementById("ros_status").innerHTML = "<span style='color: green;'>Running</span>";
     launch_run_pub.publish(launch_msg);
+    console.log('Launching: ' + launch_msg.data);
     
     document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 10 +"%;");
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",10)

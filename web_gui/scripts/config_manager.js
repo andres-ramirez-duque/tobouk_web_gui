@@ -3,7 +3,7 @@ var launch_run_pub;
 var launch_msg;
 var launch_kill_pub;
 
-var naoqi= true;
+var naoqi;
 var t_doactivity;
 var t_idle;
 var t_pause
@@ -61,20 +61,30 @@ function save_config() {
 		winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
 }
 
-function onChange_config() {
-    t_doactivity = document.getElementById("doactivity").value;
-    sessionStorage.setItem('t_doactivity',t_doactivity);
+function onChange_config(name_val) {
     
-    t_query_response = document.getElementById("query_response").value;
-    sessionStorage.setItem('t_query_response',t_query_response);
-
-    t_idle = document.getElementById("idle").value;
-    sessionStorage.setItem('t_idle',t_idle);
-
-    t_pause = document.getElementById("pause").value;
-    sessionStorage.setItem('t_pause',t_pause);
-
-    console.log('Config features saved: ');
+    if (name_val =='switch'){
+      naoqi = document.getElementById("naoqi_switch");
+      sessionStorage.setItem('naoqi',naoqi.checked);
+      console.log('set naoqi: '+ naoqi.checked);
+    }
+    if (name == 'doactivity'){
+      t_doactivity = document.getElementById("doactivity").value;
+      sessionStorage.setItem('t_doactivity',t_doactivity);
+    }
+    if (name_val =='query_response'){
+      t_query_response = document.getElementById("query_response").value;
+      sessionStorage.setItem('t_query_response',t_query_response);
+    }
+    if (name_val =='idle'){
+      t_idle = document.getElementById("idle").value;
+      sessionStorage.setItem('t_idle',t_idle);
+    }
+    if (name_val =='pause'){
+      t_pause = document.getElementById("pause").value;
+      sessionStorage.setItem('t_pause',t_pause);
+    }
+    console.log('Config features saved for: ' + name_val);
 }
 
 window.onload = function () {
