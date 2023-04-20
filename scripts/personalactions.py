@@ -15,6 +15,8 @@ def main (argv):
           "calmdown" : '"calmdown/behavior_1"',
           "babyshark" : '"babyshark/behavior_1"',
           "oldmacdonald" : '"oldmacdonald/behavior_1"',
+          "fivemonkeys" : '"fivemonkeys/behavior_1"',
+          "happyandyouknow" : '"happyandyouknow/behavior_1"',
           "saxophone" : '"saxophone/behavior_1"',
           "guitar" : '"animations/Stand/Waiting/AirGuitar_1"',
           "belly" : '"breathing/behavior_1"',
