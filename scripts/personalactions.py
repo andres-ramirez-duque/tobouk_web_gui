@@ -18,12 +18,12 @@ def main (argv):
           "fivemonkeys" : '"fivemonkeys/behavior_1"',
           "happyandyouknow" : '"happyandyouknow/behavior_1"',
           "saxophone" : '"saxophone/behavior_1"',
-          "guitar" : '"animations/Stand/Waiting/AirGuitar_1"',
+          "guitar" : '"guitar/behavior_1"',
           "belly" : '"breathing/behavior_1"',
           "cookies" : '"cookies/behavior_1"',
           "chocolate" : '"chocolate/behavior_1"',
           "taichi" : '"taichi/taichi"',
-          "relax_song" : '"relax_song/behavior_1"'
+          "relax_song" : '"taichi/taichi"'
         }            
 
         actions_yaml = """
