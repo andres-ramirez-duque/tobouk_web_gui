@@ -1,10 +1,11 @@
 <launch>
   <arg name="rasp_ip" default="10.42.0.254"/>
   <arg name="jet_ip" default="10.42.0.1"/>
+  <arg name="machine_name" default="tobojetuk"/>
   
-  <machine name="tobojetuk" address="$(arg jet_ip)" env-loader="/opt/ros/melodic/env_tobojetuk.sh" default="false" user="tobojetuk"/>
+  <machine name="$(arg machine_name)" address="$(arg jet_ip)" env-loader="/opt/ros/melodic/env_tobojetuk.sh" default="false" user="$(arg machine_name)"/>
    
   <node name="zed_gst_receiver" pkg="tobouk_web_gui" type="zed_gst_receiver_cmd" args="$(find tobouk_web_gui)/web_gui/hlstest $(arg rasp_ip)"/>
   
-  <node machine="tobojetuk" name="zed_gst_sender" pkg="tobo_perception" type="zed_gst_sender_cmd" args="$(arg rasp_ip)"/>
+  <node machine="$(arg machine_name)" name="zed_gst_sender" pkg="tobo_perception" type="zed_gst_sender_cmd" args="$(arg rasp_ip)"/>
 </launch>

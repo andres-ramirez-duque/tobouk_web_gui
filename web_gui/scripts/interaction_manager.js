@@ -30,6 +30,7 @@ var record_request;
 
 var ros_IP = sessionStorage.getItem('ros_IP');
 var jet_IP = sessionStorage.getItem('jet_IP');
+var nao_IP = sessionStorage.getItem('nao_IP');
 var jet_name = sessionStorage.getItem('jet_name');
 var url = "http://"+ros_IP+":4200/";
 var recording_len = sessionStorage.getItem('recording_len');
@@ -119,7 +120,7 @@ function ros_connect() {
         messageType : 'std_msgs/String'
     });
     launch_msg = new ROSLIB.Message({
-        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:='+sessionStorage.getItem('naoqi')
+        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:='+sessionStorage.getItem('naoqi')+' roscore_ip:='+rasp_IP+' nao_ip:='+nao_IP
     });
     launch_kill_pub = new ROSLIB.Topic({
         ros : ros,

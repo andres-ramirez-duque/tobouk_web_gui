@@ -11,7 +11,9 @@ var t_query_response;
 
 var video = document.getElementById('video');
 
-var ros_IP = sessionStorage.getItem('ros_IP');;
+var ros_IP = sessionStorage.getItem('ros_IP');
+var jet_IP = sessionStorage.getItem('jet_IP');
+var jet_name = sessionStorage.getItem('jet_name');
 var url = "http://"+ros_IP+":4200/";
 
 let winObj = window.parent;
@@ -21,9 +23,9 @@ function start_video() {
     
     var message = JSON.stringify({
 				      type : 'input',
-				      data : 'roslaunch tobouk_web_gui tobouk_web_config.launch\n'
+				      data : 'roslaunch tobouk_web_gui tobouk_web_config.launch rasp_ip:='+ros_IP+' jet_ip:='+jet_IP+' machine_name:='+jet_name+'\n'
 		});
-		
+		console.log('roslaunch tobouk_web_gui tobouk_web_config.launch rasp_ip:='+ros_IP+' jet_ip:='+jet_IP+' machine_name:='+jet_name+'\n');
 		//winObj.postMessage(message, url);
     winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
     

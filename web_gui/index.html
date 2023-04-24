@@ -34,16 +34,19 @@
 		var t_pause = '5';
 		var t_query_response = '5';
 		var jet_name = 'tobojetuk';
+		var rasp_name_a = 'toboraspuk-desktop';
 		var rasp_name = 'toboraspuk';
 		var rasp_pass = 'tobo2021';
 		var passphrase = 'tobo2023';
-		var jet_IP = '10.42.0.1'; 
+		var jet_IP = '10.42.0.1';
+		var nao_IP = '192.168.42.176'; 
 	  var recording_len = 35000;
 	  var url = "htmls/main.html";
 		var shell_url = "http://"+ros_IP+":4200";
     
 		sessionStorage.setItem('ros_IP',ros_IP);
 		sessionStorage.setItem('jet_IP',jet_IP);
+		sessionStorage.setItem('nao_IP',nao_IP);
 		sessionStorage.setItem('jet_name',jet_name);
 		sessionStorage.setItem('rasp_name',rasp_name);
 		sessionStorage.setItem('naoqi', naoqi);
@@ -75,7 +78,7 @@
 			case "output" :
 				// Append new output
 				//console.log('Data = ' + decoded.data+'\n');
-				if (decoded.data == rasp_name+'-desktop login: '){
+				if (decoded.data == rasp_name_a+' login: '){
 				  var message = JSON.stringify({
 				      type : 'input',
 				      data : rasp_name+'\n'

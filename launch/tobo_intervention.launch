@@ -1,8 +1,12 @@
 <launch>
   <arg name="run_naoqi_driver"  default="true"/>
+  <arg name="roscore_ip"        default="10.42.0.254"/>
+  <arg name="nao_ip"            default="192.168.42.176"/>
   
   <include file="$(find tobouk_core)/launch/tobo_core.launch">
     <arg name="run_naoqi_driver" value="$(arg run_naoqi_driver)"/>
+    <arg name="roscore_ip" value="$(arg roscore_ip)"/>
+    <arg name="nao_ip" value="$(arg nao_ip)"/>
   </include>
   
   <include file="$(find tobo_planner)/launch/tobo_planner.launch"/>
