@@ -224,6 +224,11 @@
         if (temp_url !== url){
             winObj.document.getElementById("shell").src = url;
         }
+        var message = JSON.stringify({
+				    type : 'session'
+			  });
+			  winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+                
         function save_form() {
             var breathing = document.getElementById("selectbreathing").value;
             var relaxing = document.getElementById("selectrelaxing").value;

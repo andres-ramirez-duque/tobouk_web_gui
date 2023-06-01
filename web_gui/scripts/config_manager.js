@@ -42,7 +42,7 @@ function start_video() {
         hls.attachMedia(video);
         setTimeout(() => {
         hls.loadSource('../hlstest/playlist.m3u8');
-        },12000);
+        },15000);
     }
     else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = '../hlstest/playlist.m3u8';
@@ -95,4 +95,8 @@ window.onload = function () {
     if (temp_url !== url){
       winObj.document.getElementById("shell").src = url;
     }
+    var message = JSON.stringify({
+				    type : 'session'
+			  });
+		winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
 }

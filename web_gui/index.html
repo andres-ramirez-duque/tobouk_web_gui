@@ -101,8 +101,14 @@
 				}
 				break;
 			case "session" :
-				// Reload session status
-				session.innerHTML = 'Session status: ' + decoded.data;
+				console.log('Session status: ' + decoded.data);
+			  if (decoded.data == 'closed'){
+				  // Reload session status
+				  var message = JSON.stringify({
+				    type : 'reconnect'
+			    });
+			    shell.contentWindow.postMessage(message, shell_url);
+				}
 				break;
 			}
 		}, false);

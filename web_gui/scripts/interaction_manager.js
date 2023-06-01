@@ -120,7 +120,7 @@ function ros_connect() {
         messageType : 'std_msgs/String'
     });
     launch_msg = new ROSLIB.Message({
-        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:='+sessionStorage.getItem('naoqi')+' roscore_ip:='+rasp_IP+' nao_ip:='+nao_IP
+        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:='+sessionStorage.getItem('naoqi')+' roscore_ip:='+ros_IP+' nao_ip:='+nao_IP
     });
     launch_kill_pub = new ROSLIB.Topic({
         ros : ros,
@@ -205,6 +205,15 @@ function ros_connect() {
       });
     record_request = new ROSLIB.ServiceRequest({
     });
+    stopNaoqiClient = new ROSLIB.Service({
+        ros : ros,
+        name : '/naoqi_driver/set_behavior',
+        serviceType : 'naoqi_bridge_msgs/SetString'
+      });
+    
+    stopqi_request = new ROSLIB.ServiceRequest({
+        data : 'stop'
+    });
 }
 
 function ros_disconnect() {
@@ -217,11 +226,11 @@ function ros_disconnect() {
     ros.close();
 }
 function stop_nao() {
-    stopNaoClient.callService(stop_request, function(result) {
+    stopNaoqiClient.callService(stopqi_request, function(result) {
         console.log('Result for service call on '
-          + stopNaoClient.name
+          + stopNaoqiClient.name
           + ': '
-          + result.planner_ok);
+          + result.success);
     });
 }
 function record_nao() {
@@ -263,9 +272,10 @@ function launch_run() {
 		});
     winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
     },1000);
-    set_personalized_form();
+    //set_personalized_form();
 }
 function launch_kill() {
+    stop_nao();
     document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)
     document.getElementById("ros_status").innerHTML = "<span style='color: red;'>Stopped</span>";
@@ -337,7 +347,11 @@ window.onload = function () {
     if (temp_url !== url){
       winObj.document.getElementById("shell").src = url;
     }
-    
+    var message = JSON.stringify({
+				    type : 'session'
+		});
+		winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+			  
     document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)     
     forEachButton(b => b.setAttribute("disabled", "disabled"));
