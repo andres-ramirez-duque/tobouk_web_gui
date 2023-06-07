@@ -48,8 +48,8 @@
             <div class=" col-md-4"></div>
             <div class=" col-md-2">
                 <p> </p>
-                <button id="ros_connect"  onclick="ros_connect()" type="button" class="btn btn-light btn-lg"><i class="fa fa-rocket" aria-hidden="true" style="font-size:24px"></i></button>
-                <button id="ros_disconnect" onclick="ros_disconnect()" type="button" class="btn btn-light btn-lg"><i class="fa fa-window-close-o" aria-hidden="true" style="font-size:24px"></i></button>
+                <button id="ros_connect"  onclick="launch_naoqi()" type="button" class="btn btn-light btn-lg"><i class="fa fa-rocket" aria-hidden="true" style="font-size:24px"></i></button>
+                <button id="ros_disconnect" onclick="stop_naoqi()" type="button" class="btn btn-light btn-lg"><i class="fa fa-window-close-o" aria-hidden="true" style="font-size:24px"></i></button>
             </div>
         </div>
     </div>
@@ -74,7 +74,53 @@
             <div id="procedure_progress" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%; font-size:large;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"> </div>
         </div>
     </div>
-
+    <div class="container-lg">
+        <div class="box bg-2">
+            <div class=" col-md-2"></div>
+            <div class="col-md-5">
+                <h4>Robot Manual Controls:</h4>
+                <button onclick="change_volume(-5.0)" type="button" class="btn btn-secondary"> <i class="fa fa-minus-square" style="font-size:24px"></i></button>
+                <button onclick="change_volume(5.0)" type="button" class="btn btn-success"><i class="fa fa-plus-square" style="font-size:24px"></i></button>
+                <h5>Robot Volume: <span id="nao_volume"></span></h5>
+                <!--h5><i class="fa fa-smile-o" aria-hidden="true" style="font-size:36px; color: green"></i> 
+                    &nbsp;Anxiety&nbsp;
+                    <i class="fa fa-meh-o" aria-hidden="true" style="font-size:36px; color: yellow"></i>
+                    &nbsp;Perception&nbsp;
+                    <i class="fa fa-frown-o" aria-hidden="true" style="font-size:36px; color: red"></i>
+                </h5>
+                <input type="range" min="0" max="100" class="form-range" id="anxiety-level" onchange="onchange_anxiety(this.value)"-->
+            </div>
+            <div class="col-md-5">
+                <h5> </h5>
+                <p> </p>
+                <div class="dropup">
+                    <button class="btn btn-dark dropdown-toggle btn-lg" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        Run Pre-scripted Behaviors
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu2">
+                        <li><button onclick="behavior_nao('bruno/behavior_1')" class="dropdown-item" type="button">We don't talk about bruno dance</button></li>
+                        <li><button onclick="behavior_nao('look/behavior_1')" class="dropdown-item" type="button">Made you look dance</button></li>
+                        <li><button onclick="behavior_nao('bam/behavior_1')" class="dropdown-item" type="button">Bam Bam Dance</button></li>
+                        <li><button onclick="behavior_nao('shakeit/behavior_1')" class="dropdown-item" type="button">Shake it off dance</button></li>
+                        <li><button onclick="behavior_nao('arm_dance/behavior_1')" class="dropdown-item" type="button">Arm Dance</button></li>
+                        <li><button onclick="behavior_nao('happy/behavior_1')" class="dropdown-item" type="button">Happy song (Pharell W.)</button></li>
+                        <li><button onclick="behavior_nao('calmdown/behavior_1')" class="dropdown-item" type="button">Calm Down song</button></li>
+                        <li><button onclick="behavior_nao('babyshark/behavior_1')" class="dropdown-item" type="button">Baby Shark song</button></li>
+                        <li><button onclick="behavior_nao('oldmacdonald/behavior_1')" class="dropdown-item" type="button">Old MacDonald song</button></li>
+                        <li><button onclick="behavior_nao('fivemonkeys/behavior_1')" class="dropdown-item" type="button">Five Little Monkeys song</button></li>
+                        <li><button onclick="behavior_nao('macarena_2/behavior_1')" class="dropdown-item" type="button">Macarena</button></li>
+                        <li><button onclick="behavior_nao('happyandyouknow/behavior_1')" class="dropdown-item" type="button">Happy and you Know song</button></li>
+                        <li><button onclick="behavior_nao('saxophone/behavior_1')" class="dropdown-item" type="button">Saxophone performance</button></li>
+                        <li><button onclick="behavior_nao('guitar/behavior_1')" class="dropdown-item" type="button">Guitar performance</button></li>
+                        <li><button onclick="behavior_nao('taichi/taichi')" class="dropdown-item" type="button">Taichi</button>
+                        <li><button onclick="behavior_nao('breathing/behavior_1')" class="dropdown-item" type="button">Belly breathing</button></li>
+                        <li><button onclick="behavior_nao('cookies/behavior_1')" class="dropdown-item" type="button">Smelling cookies</button></li>
+                        <li><button onclick="behavior_nao('chocolate/behavior_1')" class="dropdown-item" type="button">Making hot chocolate</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container-lg">
         <div class="box bg-4">
             <div class=" col-md-7">
@@ -85,6 +131,7 @@
             </div>
             <div class=" col-md-1"></div>
             <div class=" col-md-4">
+                <p>Robot Status: <span id="robot_status"></span></p>
                 <p>ROS Launch Status: <span id="ros_status"></span></p>
                 <p>Websocket Connection status: <span id="web_status"></span></p>
             </div>

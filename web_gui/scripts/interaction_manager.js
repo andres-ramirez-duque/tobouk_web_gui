@@ -36,6 +36,9 @@ var url = "http://"+ros_IP+":4200/";
 var recording_len = sessionStorage.getItem('recording_len');
 let winObj = window.parent;
 
+var curr_vol_level;
+var new_vol_level;
+
 requestModalEl.addEventListener('show.bs.modal', function (event) {
     var request_msg = document.getElementById('request_msg')
     var btn_opt1 = document.getElementById('opt_1')
@@ -56,9 +59,6 @@ requestModalEl.addEventListener('hide.bs.modal', function (event) {
     clearInterval(downloadTimer); 
 })
 function ros_connect() {
-    forEachButton(b => b.removeAttribute("disabled"));
-    document.getElementById("ros_connect").setAttribute("disabled","disabled");
-    
     // Init handle for rosbridge_websocket
     ros = new ROSLIB.Ros({
         url: "ws://" + ros_IP + ":9090"
@@ -72,6 +72,10 @@ function ros_connect() {
     
     ros.on('close', function() {
         document.getElementById("web_status").innerHTML = "<span style='color: yellow;'>Closed</span>";
+    });
+    hospital_name = new ROSLIB.Param({
+        ros : ros,
+        name : '/hospital_name'
     });
     child_name = new ROSLIB.Param({
         ros : ros,
@@ -119,13 +123,22 @@ function ros_connect() {
         name : '/run',
         messageType : 'std_msgs/String'
     });
+    launch_naoqi_msg = new ROSLIB.Message({
+        data: 'naoqi_driver naoqi_driver.launch roscore_ip:='+ros_IP+' nao_ip:='+nao_IP
+    });
     launch_msg = new ROSLIB.Message({
-        data: 'tobouk_web_gui tobo_intervention.launch run_naoqi_driver:='+sessionStorage.getItem('naoqi')+' roscore_ip:='+ros_IP+' nao_ip:='+nao_IP
+        data: 'tobouk_web_gui tobo_intervention.launch'
+    });
+    kill_msg = new ROSLIB.Message({
+        data: 'intervention'
+    });
+    kill_naoqi_msg = new ROSLIB.Message({
+        data: 'naoqi'
     });
     launch_kill_pub = new ROSLIB.Topic({
         ros : ros,
         name : '/kill',
-        messageType : 'std_msgs/Empty'
+        messageType : 'std_msgs/String'
     });
     request_pub = new ROSLIB.Topic({
         ros : ros,
@@ -210,9 +223,20 @@ function ros_connect() {
         name : '/naoqi_driver/set_behavior',
         serviceType : 'naoqi_bridge_msgs/SetString'
       });
-    
     stopqi_request = new ROSLIB.ServiceRequest({
         data : 'stop'
+    });
+    getNaoqiVolume = new ROSLIB.Service({
+        ros : ros,
+        name : '/naoqi_driver/get_volume',
+        serviceType : 'naoqi_bridge_msgs/GetFloat'
+      });
+    setNaoqiVolume = new ROSLIB.Service({
+        ros : ros,
+        name : '/naoqi_driver/set_volume',
+        serviceType : 'naoqi_bridge_msgs/SetFloat'
+    });
+    emptyvol_request = new ROSLIB.ServiceRequest({
     });
 }
 
@@ -246,9 +270,30 @@ function record_nao() {
     });
     document.getElementById("record").removeAttribute("disabled");    
     },recording_len);
-    /*nao_behavior_msg = new ROSLIB.Message({
+}
+function behavior_nao(nao_behavior){
+    nao_behavior_msg = new ROSLIB.Message({
         speech_cmd: "^call(ALBehaviorManager.runBehavior(\"" + nao_behavior + "\"))"
-    });*/
+    });
+    speech_pub.publish(nao_behavior_msg);
+    console.log('Running Tobo Behaviour: ' + nao_behavior_msg.speech_cmd);
+}
+function launch_naoqi() {
+    launch_run_pub.publish(launch_naoqi_msg);
+    console.log('Launching: ' + launch_naoqi_msg.data);
+    setTimeout(()=> {
+        forEachButton(b => b.removeAttribute("disabled"));
+        document.getElementById("ros_connect").setAttribute("disabled","disabled");
+        document.getElementById("robot_status").innerHTML = "<span style='color: green;'>Running</span>";
+    },1000);
+}
+function stop_naoqi() {
+    document.getElementById("robot_status").innerHTML = "<span style='color: red;'>Stopped</span>";
+    forEachButton(b => b.setAttribute("disabled","disabled"));
+    document.getElementById("ros_connect").removeAttribute("disabled");
+
+    launch_kill_pub.publish(kill_naoqi_msg);
+    console.log('Killing: ' + kill_naoqi_msg.data);
 }
 function launch_run() {
     document.getElementById("ros_status").innerHTML = "<span style='color: green;'>Running</span>";
@@ -272,14 +317,14 @@ function launch_run() {
 		});
     winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
     },1000);
-    //set_personalized_form();
+    set_personalized_form();
 }
 function launch_kill() {
     stop_nao();
     document.getElementById("procedure_progress").setAttribute("style","font-size:large; width: "+ 0 +"%;");
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)
     document.getElementById("ros_status").innerHTML = "<span style='color: red;'>Stopped</span>";
-    launch_kill_pub.publish();
+    launch_kill_pub.publish(kill_msg);
     setTimeout(()=> {
     var message = JSON.stringify({
 				      type : 'input',
@@ -311,8 +356,27 @@ function forEachButton(func) {
         func(elements[i])
     }
 }
+function change_volume(vol_level){
+    getNaoqiVolume.callService(emptyvol_request, function(result) {
+        curr_vol_level = result.data;
+        console.log(result.message + ': ' + curr_vol_level);
+    });
+    setTimeout(()=> {
+        new_vol_level = curr_vol_level + vol_level;
+        vol_request = new ROSLIB.ServiceRequest({
+            data : new_vol_level
+        });
+        setNaoqiVolume.callService(vol_request, function(result) {
+            console.log(result.message + ': ' + result.success);
+        });
+        if (new_vol_level >= 0 && new_vol_level <= 100){
+            document.getElementById("nao_volume").innerHTML = new_vol_level;
+        }
+    },500);
+}
 function set_personalized_form(){
     child_name.set(sessionStorage.getItem('child_name'));
+    hospital_name.set(sessionStorage.getItem('hospital_name'));
     child_gender.set(sessionStorage.getItem('child_gender'));
     child_color.set(sessionStorage.getItem('child_color'));
     is_younger_child.set(sessionStorage.getItem('is_younger_child'));
@@ -356,6 +420,8 @@ window.onload = function () {
     document.getElementById("procedure_progress").setAttribute("aria-valuenow",0)     
     forEachButton(b => b.setAttribute("disabled", "disabled"));
     document.getElementById("ros_connect").removeAttribute("disabled");
+    document.getElementById("robot_status").innerHTML = " ";
     document.getElementById("ros_status").innerHTML = " ";
     document.getElementById("web_status").innerHTML = " ";
+    ros_connect();
 }

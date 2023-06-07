@@ -33,6 +33,8 @@
 		var t_idle = '5';
 		var t_pause = '5';
 		var t_query_response = '5';
+		var child_name = 'Sarah';
+		var hospital_name = 'Hospital for Sick Children';
 		var jet_name = 'tobojetuk';
 		var rasp_name_a = 'toboraspuk-desktop';
 		var rasp_name = 'toboraspuk';
@@ -40,8 +42,8 @@
 		var passphrase = 'tobo2023';
 		var jet_IP = '10.42.0.1';
 		var nao_IP = '192.168.42.176'; 
-	  var recording_len = 35000;
-	  var url = "htmls/main.html";
+		var recording_len = 35000;
+		var url = "htmls/main.html";
 		var shell_url = "http://"+ros_IP+":4200";
     
 		sessionStorage.setItem('ros_IP',ros_IP);
@@ -54,7 +56,9 @@
 		sessionStorage.setItem('t_query_response',t_query_response);
 		sessionStorage.setItem('t_idle',t_idle);
 		sessionStorage.setItem('t_pause',t_pause);
-    sessionStorage.setItem('recording_len',recording_len);
+		sessionStorage.setItem('child_name',child_name);
+		sessionStorage.setItem('hospital_name',hospital_name);
+    	sessionStorage.setItem('recording_len',recording_len);
 		// Receive response from shellinabox
 		window.addEventListener("message", function(message) {
 			// Allow messages only from shellinabox

@@ -46,9 +46,11 @@
                 <h3>Personalized Interaction Form</h3>
                 <h3><small class="text-muted">Web TOBO GUI</small></h3>
             </div>
-            <div class=" col-md-2">
+            <div class=" col-md-1">
             </div>
             <div class=" col-md-3">
+                <label for="hospitalname" class="form-label">Hospital Name</label>
+                <input type="text" id="hospitalname" class="form-control" aria-describedby="nameHelpBlock" value="Hospital for Sick Children">
             </div>
             <div class=" col-md-1"></div>
         </div>
@@ -60,7 +62,7 @@
             <div class="col-md-4">
                 <form>    
                     <label for="inputname" class="form-label">Child Name</label>
-                    <input type="text" id="inputname" class="form-control" aria-describedby="nameHelpBlock">
+                    <input type="text" id="inputname" class="form-control" aria-describedby="nameHelpBlock" value="Sarah">
                     <p></p>
                     <label for="selectage" class="form-label">Child's Age Range</label>
                     <select id="selectage" class="form-select"  aria-describedby="ageHelpBlock">
@@ -211,7 +213,7 @@
             <div class=" col-md-1"></div>
             <div class=" col-md-4">
                 <p></p>
-                <a id="go_dashboard" onclick="save_form()" role="button" class="btn btn-light" href="main_interaction.html">Go to Dashboard &raquo;</a>
+                <a id="go_dashboard" onclick="save_form()" role="button" class="btn btn-light" href="main_interaction.html">Save and Go to Dashboard &raquo;</a>
             </div>
         </div>
     </div>
@@ -244,6 +246,7 @@
             
             console.log('Starting save form funtion');
             sessionStorage.setItem('child_name', document.getElementById('inputname').value);
+            sessionStorage.setItem('hospital_name', document.getElementById('hospitalname').value);
             sessionStorage.setItem('child_gender', document.getElementById('selectgender').value);
             sessionStorage.setItem('child_color', document.getElementById('selectcolor').value);
             sessionStorage.setItem('is_younger_child', document.getElementById('selectage').value);
