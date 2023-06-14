@@ -201,6 +201,27 @@ function ros_connect() {
             }
         }
     });
+    battery_sub = new ROSLIB.Topic({
+        ros : ros,
+        name : '/naoqi_driver/BatteryChargeChanged',
+        messageType : 'tobo_planner/action_chain'
+    });
+    battery_sub.subscribe(function(message) {
+        console.log('Received message on ' + command_sub.name + ', Reporting Battery Level: ' + message.execution_status.level);
+        if (message.execution_status.level >= 80.0){
+            document.getElementById("battery").innerHTML = message.execution_status.level + "% <span style='color:green;font-size:36px'>&#xf240;</span>";
+        } else if (message.execution_status.level < 80.0  &&  message.execution_status.level >= 60.0) {
+            document.getElementById("battery").innerHTML = message.execution_status.level + "% <span style='color:yellow;font-size:36px'>&#xf241;</span>";
+        } else if (message.execution_status.level < 60.0  &&  message.execution_status.level >= 40.0){
+            document.getElementById("battery").innerHTML = message.execution_status.level + "% <span style='color:orange;font-size:36px'>&#xf242;</span>";
+        } else if (message.execution_status.level < 40.0  &&  message.execution_status.level >= 20){
+            document.getElementById("battery").innerHTML = message.execution_status.level + "% <span style='color:red;font-size:36px'>&#xf243;</span>";
+        } else if (message.execution_status.level < 20.0  &&  message.execution_status.level >= 0){
+            document.getElementById("battery").innerHTML = message.execution_status.level + "% <span style='color:red;font-size:36px'>&#xf244;</span>";
+        } else{
+            console.log('Error with the battery level reported: ' + message.execution_status.level);
+        }
+    });
     stopNaoClient = new ROSLIB.Service({
         ros : ros,
         name : '/stop_nao',
@@ -286,6 +307,7 @@ function launch_naoqi() {
         document.getElementById("ros_connect").setAttribute("disabled","disabled");
         document.getElementById("robot_status").innerHTML = "<span style='color: green;'>Running</span>";
     },1000);
+    document.getElementById("battery").innerHTML = "<span style='color:white;font-size:36px'>&#xf244;</span>";
 }
 function stop_naoqi() {
     document.getElementById("robot_status").innerHTML = "<span style='color: red;'>Stopped</span>";
@@ -294,6 +316,7 @@ function stop_naoqi() {
 
     launch_kill_pub.publish(kill_naoqi_msg);
     console.log('Killing: ' + kill_naoqi_msg.data);
+    document.getElementById("battery").innerHTML = "<span style='color:white;font-size:36px'>&#xf244;</span>";
 }
 function launch_run() {
     document.getElementById("ros_status").innerHTML = "<span style='color: green;'>Running</span>";
