@@ -168,6 +168,31 @@
           </div>
         </div>
     </div>
+    <div class="modal fade" id="naoipcheckModal" tabindex="-1" aria-labelledby="naoipcheckModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+                    <h2 class="modal-title" id="naoipcheckModalLabel">NAO IP Check</h2>
+            </div>
+            <div class="modal-body">
+                <div class="container-lg">
+                    <div class="box bg-4">
+                        <h4 class="modal-title" id="naoipcheck_msg">Please confirm the NAO IP pressing on the chest button before continue</h4>
+                    </div>
+                    <div class="box bg-2">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <input type="text" id="naoip_input" class="form-control" aria-describedby="nameHelpBlock" value="NAO IP">
+                            <button id='naoipcheck_ok' onclick="naoipcheck_ok()" type="button" class="btn btn-info btn-lg">Continue &raquo;</button>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <h5><span id="timer"></span></h5>
+            </div>
+          </div>
+        </div>
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="../scripts/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

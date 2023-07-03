@@ -21,6 +21,8 @@ var nao_behavior_msg;
 var downloadTimer;
 var requestModalEl = document.getElementById('requestModal');
 var requestModal = bootstrap.Modal.getOrCreateInstance(requestModalEl);
+var naoipcheckModalEl = document.getElementById('naoipcheckModal');
+var naoipcheckModal = bootstrap.Modal.getOrCreateInstance(naoipcheckModalEl);
 var r_type;
 var p_step;
 var stopNaoClient;
@@ -39,6 +41,9 @@ let winObj = window.parent;
 var curr_vol_level;
 var new_vol_level;
 
+naoipcheckModalEl.addEventListener('show.bs.modal', function (event) {
+    document.getElementById("naoip_input").value = sessionStorage.getItem('nao_IP');
+})
 requestModalEl.addEventListener('show.bs.modal', function (event) {
     var request_msg = document.getElementById('request_msg')
     var btn_opt1 = document.getElementById('opt_1')
@@ -123,11 +128,11 @@ function ros_connect() {
         name : '/run',
         messageType : 'std_msgs/String'
     });
-    launch_naoqi_msg = new ROSLIB.Message({
-        data: 'naoqi_driver naoqi_driver.launch roscore_ip:='+ros_IP+' nao_ip:='+nao_IP
-    });
     launch_msg = new ROSLIB.Message({
         data: 'tobouk_web_gui tobo_intervention.launch'
+    });
+    launch_naoqi_msg = new ROSLIB.Message({
+        data: 'naoqi_driver naoqi_driver.launch roscore_ip:='+ros_IP+' nao_ip:='+nao_IP
     });
     kill_msg = new ROSLIB.Message({
         data: 'intervention'
@@ -299,7 +304,22 @@ function behavior_nao(nao_behavior){
     speech_pub.publish(nao_behavior_msg);
     console.log('Running Tobo Behaviour: ' + nao_behavior_msg.speech_cmd);
 }
+function naoipcheck_ok(){
+    sessionStorage.setItem('nao_IP',document.getElementById("naoip_input").value);
+    sessionStorage.setItem('naoip_checked',true);
+    console.log('Nao ip is checked: ' +  (sessionStorage.getItem('naoip_checked') == 'false'));
+    console.log('Nao new IP: ' +  sessionStorage.getItem('nao_IP'));
+    nao_IP = sessionStorage.getItem('nao_IP');
+    launch_naoqi_msg.data = 'naoqi_driver naoqi_driver.launch roscore_ip:='+ros_IP+' nao_ip:='+nao_IP;
+    naoipcheckModal.hide();
+    launch_naoqi();
+}
 function launch_naoqi() {
+    if(sessionStorage.getItem('naoip_checked') == 'false'){
+        document.getElementById("naoipcheck_ok").removeAttribute("disabled");
+        console.log('Nao ip is checked: ' +  (sessionStorage.getItem('naoip_checked') == 'false'));
+        naoipcheckModal.toggle();
+    } else {
     launch_run_pub.publish(launch_naoqi_msg);
     console.log('Launching: ' + launch_naoqi_msg.data);
     setTimeout(()=> {
@@ -308,6 +328,7 @@ function launch_naoqi() {
         document.getElementById("robot_status").innerHTML = "<span style='color: green;'>Running</span>";
     },1000);
     document.getElementById("battery").innerHTML = "<span style='color:white;font-size:36px'>&#xf244;</span>";
+    }
 }
 function stop_naoqi() {
     document.getElementById("robot_status").innerHTML = "<span style='color: red;'>Stopped</span>";
