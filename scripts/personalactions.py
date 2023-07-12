@@ -23,7 +23,7 @@ def main (argv):
           "cookies" : '"cookies/behavior_1"',
           "chocolate" : '"chocolate/behavior_1"',
           "taichi" : '"taichi/taichi"',
-          "relax_song" : '"taichi/taichi"'
+          "twinklestar" : '"twinklestar/behavior_1"'
         }            
 
         actions_yaml = """

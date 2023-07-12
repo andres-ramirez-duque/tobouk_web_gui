@@ -25,6 +25,7 @@ var naoipcheckModalEl = document.getElementById('naoipcheckModal');
 var naoipcheckModal = bootstrap.Modal.getOrCreateInstance(naoipcheckModalEl);
 var r_type;
 var p_step;
+var org_params;
 var stopNaoClient;
 var stop_request;
 var recordNaoClient;
@@ -159,8 +160,10 @@ function ros_connect() {
         console.log('Received message on ' + request_sub.name + ', Request Type: ' + message.request_type + ', Plan Step: ' + message.plan_step);
         r_type = message.request_type
         p_step = message.plan_step
+        org_params = message.parameters
         if(message.request_type == 'anxiety test'){
-            msg = 'Please select True if the child anxiety level is low, otherwise select False'
+            msg = 'Is the child comfortable with the robot?'
+            message.parameters = ['Yes - Continue','No - Child distressed']
         }else if(message.request_type == 'type preference query'){
             msg = 'Which of the following types of activities do you prefer?'
         }else if(message.request_type == 'activity preference query'){
@@ -168,14 +171,17 @@ function ros_connect() {
         }else if(message.request_type == 'engagement test'){
             msg = 'Please select True if the child is engaged, otherwise select False'
         }else if(message.request_type == 'procedure complete query'){
-            msg = 'Has the procedure already finished?'
+            msg = 'Has the procedure finished?'
+            message.parameters = ['Yes - Procedure Finished','No - Procedure Ongoing']
         }else if(message.request_type == 'wait'){
             message.parameters = ['Ready']
+            org_params = message.parameters
             msg = 'Are you ready to progress?'
         }else if(message.request_type == 'site check query'){
             msg = 'Select True if site check will be performed, otherwise select False'
         }else if(message.request_type == 'procedure ended ok query'){
-            msg = 'select True if the procedure is going well, otherwise select False'
+            msg = 'Is the procedure going well?'
+            message.parameters = ['Yes - Procedure going well','No - Procedure not going well']
         }else{
             msg = 'Please select between the following options'
         }
@@ -381,9 +387,9 @@ function pub_request(msg) {
     requestModal.hide();
     clearInterval(downloadTimer); 
     if (msg == 'option1'){
-        var param = document.getElementById('opt_1').textContent
+        var param = org_params[0];//document.getElementById('opt_1').textContent
     } else{
-        var param = document.getElementById('opt_2').textContent
+        var param = org_params[1];//document.getElementById('opt_2').textContent
     }
     var requested_msg = new ROSLIB.Message({
         plan_step: parseInt(p_step),
@@ -425,10 +431,10 @@ function set_personalized_form(){
     child_color.set(sessionStorage.getItem('child_color'));
     is_younger_child.set(sessionStorage.getItem('is_younger_child'));
 
-    doactivity.set(parseInt(sessionStorage.getItem('t_doactivity')));
-    query_response.set(parseInt(sessionStorage.getItem('t_query_response')));
-    idle.set(parseInt(sessionStorage.getItem('t_idle')));
-    pause.set(parseInt(sessionStorage.getItem('t_pause')));
+    //doactivity.set(parseInt(sessionStorage.getItem('t_doactivity')));
+    //query_response.set(parseInt(sessionStorage.getItem('t_query_response')));
+    //idle.set(parseInt(sessionStorage.getItem('t_idle')));
+    //pause.set(parseInt(sessionStorage.getItem('t_pause')));
 }
 //countdown
 function coundDown(countdown) {
