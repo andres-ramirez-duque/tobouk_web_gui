@@ -162,6 +162,7 @@ function ros_connect() {
         p_step = message.plan_step
         org_params = message.parameters
         if(message.request_type == 'anxiety test'){
+            record_nao(recording_len);
             msg = 'Is the child comfortable with the robot?'
             message.parameters = ['Yes - Continue','No - Child distressed']
         }else if(message.request_type == 'type preference query'){
@@ -172,16 +173,17 @@ function ros_connect() {
             msg = 'Please select True if the child is engaged, otherwise select False'
         }else if(message.request_type == 'procedure complete query'){
             msg = 'Has the procedure finished?'
-            message.parameters = ['Yes - Procedure Finished','No - Procedure Ongoing']
+            message.parameters = ['Yes - Finished','No - Ongoing']
         }else if(message.request_type == 'wait'){
             message.parameters = ['Ready']
             org_params = message.parameters
             msg = 'Are you ready to progress?'
         }else if(message.request_type == 'site check query'){
-            msg = 'Select True if site check will be performed, otherwise select False'
+            msg = 'Will site check be performed?'
+            message.parameters = ['Yes - site check','No - Continue']
         }else if(message.request_type == 'procedure ended ok query'){
             msg = 'Is the procedure going well?'
-            message.parameters = ['Yes - Procedure going well','No - Procedure not going well']
+            message.parameters = ['Yes - Going well','No - Not going well']
         }else{
             msg = 'Please select between the following options'
         }
@@ -289,7 +291,7 @@ function stop_nao() {
           + result.success);
     });
 }
-function record_nao() {
+function record_nao(rec_time) { //record_nao(recording_len); 
     recordNaoClient.callService(record_request, function(result) {
         console.log('recording service toggle on: '
           + result.success);
@@ -301,7 +303,7 @@ function record_nao() {
           + result.success);
     });
     document.getElementById("record").removeAttribute("disabled");    
-    },recording_len);
+    },rec_time);
 }
 function behavior_nao(nao_behavior){
     nao_behavior_msg = new ROSLIB.Message({
