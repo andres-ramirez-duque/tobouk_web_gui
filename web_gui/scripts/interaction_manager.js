@@ -175,12 +175,12 @@ function ros_connect() {
             msg = 'Has the procedure finished?'
             message.parameters = ['Yes - Finished','No - Ongoing']
         }else if(message.request_type == 'wait'){
-            message.parameters = ['Ready']
-            org_params = message.parameters
-            msg = 'Are you ready to progress?'
+            org_params = ['Ready']
+            msg = 'Are you ready to begin the IV procedure?'
+            message.parameters = ['Yes - Ready']
         }else if(message.request_type == 'site check query'){
-            msg = 'Will site check be performed?'
-            message.parameters = ['Yes - site check','No - Continue']
+            msg = 'Will a site check be performed?'
+            message.parameters = ['Yes','No']
         }else if(message.request_type == 'procedure ended ok query'){
             msg = 'Is the procedure going well?'
             message.parameters = ['Yes - Going well','No - Not going well']
