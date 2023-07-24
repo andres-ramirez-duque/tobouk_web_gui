@@ -176,7 +176,11 @@ function ros_connect() {
             message.parameters = ['Yes - Finished','No - Ongoing']
         }else if(message.request_type == 'wait'){
             org_params = ['Ready']
-            msg = 'Are you ready to begin the IV procedure?'
+            if(p_step == 0){
+                msg = 'Are you ready to begin the intervention?'    
+            }else{
+                msg = 'Are you ready to begin the IV procedure?'
+            }
             message.parameters = ['Yes - Ready']
         }else if(message.request_type == 'site check query'){
             msg = 'Will a site check be performed?'
@@ -187,7 +191,6 @@ function ros_connect() {
         }else{
             msg = 'Please select between the following options'
         }
-        console.log(message.parameters.length)
         requestModal.toggle([msg, message.parameters]);
         coundDown(message.duration);
     });
