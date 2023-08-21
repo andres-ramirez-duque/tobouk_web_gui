@@ -171,6 +171,9 @@ function ros_connect() {
             msg = 'Which of the following activities do you prefer?'
         }else if(message.request_type == 'engagement test'){
             msg = 'Please select True if the child is engaged, otherwise select False'
+        }else if(message.request_type == 'engagement validate'){
+            msg = 'Is the child engaging with the robot?'
+            message.parameters = ['Yes - Continue','No - Child disengaged']
         }else if(message.request_type == 'procedure complete query'){
             msg = 'Has the procedure finished?'
             message.parameters = ['Yes - Finished','No - Ongoing']
