@@ -17,7 +17,6 @@
   </head>
   
   <body>
-    <script src="../scripts/hls.js"></script>
     <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color: #003865;">
         <div class="container-fluid">
           <a class="navbar-brand" href="main.html">UK-Canada AI Project</a>
@@ -65,34 +64,25 @@
                     <input type="text" id="inputname" class="form-control" aria-describedby="nameHelpBlock" value="Sarah">
                     <p></p>
                     <label for="selectage" class="form-label">Child's Age Range</label>
-                    <select id="selectage" class="form-select"  aria-describedby="ageHelpBlock">
+                    <select id="selectage" class="form-select"  aria-describedby="ageHelpBlock" onchange="firstfillSelects()">
                         <option selected>Select the child's age ranges</option>
-                        <option value="true">Younger child (5-8)</option>
-                        <option value="false">Older child (9-12)</option>
+                        <option value="false">Younger child (5-7)</option>
+                        <option value="true">Older child (8-11)</option>
                     </select>
-                    <div id="ageHelpBlock" class="form-text">These data will be used only to personalize some stages of the interaction..</div>
+                    <div id="ageHelpBlock" class="form-text">These data will be used only to personalize some stages of the interaction</div>
                 </form>
             </div>
-            <div class=" col-md-1"></div>
+            <div class="col-md-1"></div>
             <div class="col-md-4">
                 <form>
-                    <label for="selectgender" class="form-label">Child's Gender</label>
-                    <select id="selectgender" class="form-select"  aria-describedby="genderHelpBlock">
-                        <option selected>Select the child's gender</option>
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
-                        <option value="NA">NA</option>
-                    </select>
+                    <label for="selectgender" class="form-label">Child's Unique ID</label>
+                    <input type="text" id="inputid" class="form-control" aria-describedby="idHelpBlock" value="Unique ID">
                     <p></p>
-                    <label for="selectcolor" class="form-label">Child's favorite Color</label>
-                    <select id="selectcolor" class="form-select"  aria-describedby="colorHelpBlock">
-                        <option selected>Select the child's favorite color</option>
-                        <option value="green">Green</option>
-                        <option value="blue">Blue</option>
-                        <option value="red">Red</option>
-                        <option value="white">White</option>
-                        <option value="purple">Purple</option>
-                        <option value="orange">Orange</option>
+                    <label for="selectiv" class="form-label">Child's IV explanation preference</label>
+                    <select id="selectiv" class="form-select"  aria-describedby="ivHelpBlock">
+                        <option selected>Select the child's IV preference</option>
+                        <option value="true">Explain</option>
+                        <option value="false">Skip</option>
                     </select>
                 </form>   
             </div>
@@ -102,7 +92,7 @@
             <div class=" col-md-1"></div>
             <div class="col-md-4">
                 <form>    
-                    <label for="selectbreathing" class="form-label">Breathing Action</label>
+                    <!--label for="selectbreathing" class="form-label">Breathing Action</label>
                     <select id="selectbreathing" class="form-select"  aria-describedby="breathingHelpBlock">
                         <option selected>Select a breathing exercise</option>
                         <option value="belly">Belly breathing</option>
@@ -116,24 +106,9 @@
                         <option value="taichi">Taichi</option>
                         <option value="twinklestar">Twinkle star</option>
                     </select>
-                    <p></p>
+                    <p></p-->
                     <label for="selectmagic" class="form-label">Highly Diverting Action</label>
-                    <select id="selectmagic" class="form-select"  aria-describedby="magicHelpBlock">
-                        <option selected>Select a higly diverting activity</option>
-                        <option value="bruno">We don't talk about bruno dance</option>
-                        <option value="look">Made you look dance</option>
-                        <option value="bam">Bam Bam dance</option>
-                        <option value="shakeit">Shake it off dance</option>
-                        <option value="macarena">Macarena dance</option>
-                        <option value="armdance">Arm dance</option>
-                        <option value="happy">Happy song (Pharell W.)</option>
-                        <option value="calmdown">Calm Down song</option>
-                        <option value="babyshark">Baby Shark song</option>
-                        <option value="oldmacdonald">Old MacDonald song</option>
-                        <option value="fivemonkeys">Five Little Monkeys song</option>
-                        <option value="happyandyouknow">Happy and you Know song</option>
-                        <option value="saxophone">Saxophone performance</option>
-                        <option value="guitar">Guitar performance</option>
+                    <select id="selectmagic" class="form-select"  aria-describedby="magicHelpBlock" onchange="updateOtherSelects(this)">
                     </select>
                 </form>
             </div>
@@ -141,61 +116,16 @@
             <div class="col-md-4">
                 <form>
                     <label for="selectrewarding" class="form-label">Rewarding Action</label>
-                    <select id="selectrewarding" class="form-select"  aria-describedby="rewardingHelpBlock">
-                        <option selected>Select a rewarding activity</option>
-                        <option value="bruno">We don't talk about bruno dance</option>
-                        <option value="look">Made you look dance</option>
-                        <option value="bam">Bam Bam dance</option>
-                        <option value="shakeit">Shake it off dance</option>
-                        <option value="macarena">Macarena dance</option>
-                        <option value="armdance">Arm dance</option>
-                        <option value="happy">Happy song (Pharell W.)</option>
-                        <option value="calmdown">Calm Down song</option>
-                        <option value="babyshark">Baby Shark song</option>
-                        <option value="oldmacdonald">Old MacDonald song</option>
-                        <option value="fivemonkeys">Five Little Monkeys song</option>
-                        <option value="happyandyouknow">Happy and you Know song</option>
-                        <option value="saxophone">Saxophone performance</option>
-                        <option value="guitar">Guitar performance</option>
+                    <select id="selectrewarding" class="form-select"  aria-describedby="rewardingHelpBlock" onchange="updateOtherSelects(this)">
                     </select>
-                    <p></p>
+                    <!--p></p>
                     <label for="selectdance" class="form-label">Diverting Dance Action</label>
-                    <select id="selectdance" class="form-select"  aria-describedby="danceHelpBlock">
-                        <option selected>Select a distracting dance</option>
-                        <option value="bruno">We don't talk about bruno dance</option>
-                        <option value="look">Made you look dance</option>
-                        <option value="bam">Bam Bam dance</option>
-                        <option value="shakeit">Shake it off dance</option>
-                        <option value="macarena">Macarena dance</option>
-                        <option value="armdance">Arm dance</option>
-                        <option value="happy">Happy song (Pharell W.)</option>
-                        <option value="calmdown">Calm Down song</option>
-                        <option value="babyshark">Baby Shark song</option>
-                        <option value="oldmacdonald">Old MacDonald song</option>
-                        <option value="fivemonkeys">Five Little Monkeys song</option>
-                        <option value="happyandyouknow">Happy and you Know song</option>
-                        <option value="saxophone">Saxophone performance</option>
-                        <option value="guitar">Guitar performance</option>
+                    <select id="selectdance" class="form-select"  aria-describedby="danceHelpBlock" onchange="updateOtherSelects(this)">
                     </select>
                     <p></p>
                     <label for="selectsong" class="form-label">Diverting Song Action</label>
-                    <select id="selectsong" class="form-select"  aria-describedby="songHelpBlock">
-                        <option selected>Select a distracting song</option>
-                        <option value="bruno">We don't talk about bruno dance</option>
-                        <option value="look">Made you look dance</option>
-                        <option value="bam">Bam Bam dance</option>
-                        <option value="shakeit">Shake it off dance</option>
-                        <option value="macarena">Macarena dance</option>
-                        <option value="armdance">Arm dance</option>
-                        <option value="happy">Happy song (Pharell W.)</option>
-                        <option value="calmdown">Calm Down song</option>
-                        <option value="babyshark">Baby Shark song</option>
-                        <option value="oldmacdonald">Old MacDonald song</option>
-                        <option value="fivemonkeys">Five Little Monkeys song</option>
-                        <option value="happyandyouknow">Happy and you Know song</option>
-                        <option value="saxophone">Saxophone performance</option>
-                        <option value="guitar">Guitar performance</option>
-                    </select>
+                    <select id="selectsong" class="form-select"  aria-describedby="songHelpBlock" onchange="updateOtherSelects(this)">
+                    </select-->
                 </form>   
             </div>
             <div class=" col-md-1"></div>
@@ -221,35 +151,89 @@
         var ros_IP = sessionStorage.getItem('ros_IP');
         var url = "http://"+ros_IP+":4200/";
         let winObj = window.parent;
-        var temp_url = winObj.document.getElementById("shell").src; 
-    
+        var temp_url = winObj.document.getElementById("shell").src;
+        var behave_list = [
+            {value: "bruno", text: "We don't talk about bruno dance"},
+            {value: "look", text: "Made you look dance"},
+            {value: "bam", text: "Bam Bam dance"},
+            {value: "shakeit", text: "Shake it off dance"},
+            {value: "macarena", text: "Macarena dance"},
+            {value: "armdance", text: "Arm dance"},
+            {value: "happy", text: "Happy song (Pharell W.)"},
+            {value: "calmdown", text: "Calm Down song"},
+            {value: "babyshark", text: "Baby Shark song"},
+            {value: "fivemonkeys", text: "Five Little Monkeys song"},
+            {value: "happyandyouknow", text: "Happy and you Know song"},
+            {value: "saxophone", text: "Saxophone song"},
+            {value: "guitar", text: "Guitar song"},
+            {value: "asitwas", text: "As it was song"},
+            {value: "idontcare", text: "I dont care song"},
+            {value: "whatdoyoumean", text: "What do you mean song"},
+            {value: "blindinglights", text: "Blinding lights song"}
+        ]; 
+        
+        var init_select_list = [
+            {id:"selectmagic", initial_op: "Select a higly diverting activity"},
+            {id: "selectrewarding", initial_op: "Select a rewarding activity"},
+        ]
+        
+        // Function to initialize a select element with options
+        function fillSelects(selects, options) {
+            for (var j = 0; j < selects.length; j++) {
+                var select = document.getElementById(selects[j].id);
+                select.innerHTML = "";
+                var option = document.createElement("option");
+                option.text = selects[j].initial_op;
+                select.add(option);
+                for (var i = 0; i < options.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = options[i].value;
+                    option.text = options[i].text;
+                    select.add(option);
+                }
+            }
+        }
+        // Function to initialize a select element with options
+        function firstfillSelects() {
+            select_list = init_select_list;
+            fillSelects(select_list,behave_list);
+        }
         if (temp_url !== url){
             winObj.document.getElementById("shell").src = url;
         }
         var message = JSON.stringify({
 				    type : 'session'
-			  });
-			  winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
-                
+		});
+		winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
+        
+        function updateOtherSelects(selectedSelect) {
+            var selectedId = selectedSelect.id;
+            var selectedValue = selectedSelect.value;
+            behave_list = behave_list.filter(option => option.value !== selectedValue);
+            select_list = select_list.filter(select => select.id !== selectedId);
+            fillSelects(select_list,behave_list);
+        }
+
         function save_form() {
-            var breathing = document.getElementById("selectbreathing").value;
-            var relaxing = document.getElementById("selectrelaxing").value;
+            //var breathing = document.getElementById("selectbreathing").value;
+            //var relaxing = document.getElementById("selectrelaxing").value;
             var magic = document.getElementById("selectmagic").value;
             var rewarding = document.getElementById("selectrewarding").value;
-            var dance = document.getElementById("selectdance").value;
-            var song = document.getElementById("selectsong").value;
+            //var dance = document.getElementById("selectdance").value;
+            //var song = document.getElementById("selectsong").value;
+            var age = document.getElementById("selectage").value;
+            var iv = document.getElementById("selectiv").value;
             var message = JSON.stringify({
 				      type : 'input',
-				      data : 'python catkin_ws/src/tobouk_web_gui/scripts/personalactions.py '+breathing+' '+relaxing+' '+magic+' '+rewarding+' '+dance+' '+song+'\n'
+				      data : 'python catkin_ws/src/tobouk_web_gui/scripts/personalactions.py '+magic+' '+rewarding+' '+age+' '+iv+'\n'
 		    });
             winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
             
             console.log('Starting save form funtion');
             sessionStorage.setItem('child_name', document.getElementById('inputname').value);
             sessionStorage.setItem('hospital_name', document.getElementById('hospitalname').value);
-            sessionStorage.setItem('child_gender', document.getElementById('selectgender').value);
-            sessionStorage.setItem('child_color', document.getElementById('selectcolor').value);
-            sessionStorage.setItem('is_younger_child', document.getElementById('selectage').value);
+            sessionStorage.setItem('child_id', document.getElementById('inputid').value);
+            sessionStorage.setItem('child_age', document.getElementById('selectage').value);
         }
     </script>
     <!-- Optional JavaScript -->

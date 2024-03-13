@@ -5,18 +5,13 @@ var request_pub;
 var request_sub;
 var launch_run_pub;
 var launch_kill_pub;
-var run_naoqi_driver = 'true';
 var ros;
-var proc_stage;
 var ok_anxiety;
 var child_name;
-var child_gender;
-var child_color;
-var is_younger_child;
-var doactivity;
-var query_response;
-var pause;
-var idle;
+var planner_log;
+var core_log;
+var planner_log_name;
+var core_log_name;
 var nao_behavior_msg;
 var downloadTimer;
 var requestModalEl = document.getElementById('requestModal');
@@ -37,11 +32,22 @@ var nao_IP = sessionStorage.getItem('nao_IP');
 var jet_name = sessionStorage.getItem('jet_name');
 var url = "http://"+ros_IP+":4200/";
 var recording_len = sessionStorage.getItem('recording_len');
+var file_name = sessionStorage.getItem('child_id');
 let winObj = window.parent;
 
 var curr_vol_level;
 var new_vol_level;
 
+var saveLogs = function(log_name) {
+    const a = document.createElement('a');
+    a.href = "../logs/" + log_name;
+    a.download = log_name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+};
+//saveLogs(planner_log_name)
+//saveLogs(core_log_name)
 naoipcheckModalEl.addEventListener('show.bs.modal', function (event) {
     document.getElementById("naoip_input").value = sessionStorage.getItem('nao_IP');
 })
@@ -79,6 +85,18 @@ function ros_connect() {
     ros.on('close', function() {
         document.getElementById("web_status").innerHTML = "<span style='color: yellow;'>Closed</span>";
     });
+    core_log = new ROSLIB.Param({
+        ros : ros,
+        name : '/core_log'
+    });
+    planner_log = new ROSLIB.Param({
+        ros : ros,
+        name : '/planner_log'
+    });
+    hospital_name = new ROSLIB.Param({
+        ros : ros,
+        name : '/hospital_name'
+    });
     hospital_name = new ROSLIB.Param({
         ros : ros,
         name : '/hospital_name'
@@ -86,34 +104,6 @@ function ros_connect() {
     child_name = new ROSLIB.Param({
         ros : ros,
         name : '/child_name'
-    });
-    child_gender = new ROSLIB.Param({
-        ros : ros,
-        name : '/child_gender'
-    });
-    child_color = new ROSLIB.Param({
-        ros : ros,
-        name : '/child_color'
-    });
-    is_younger_child = new ROSLIB.Param({
-        ros : ros,
-        name : '/isyoungerchild'
-    });
-    doactivity = new ROSLIB.Param({
-        ros : ros,
-        name : '/timeouts/doactivity'
-    });
-    query_response = new ROSLIB.Param({
-        ros : ros,
-        name : '/timeouts/query_response'
-    });
-    idle = new ROSLIB.Param({
-        ros : ros,
-        name : '/timeouts/idle'
-    });
-    pause = new ROSLIB.Param({
-        ros : ros,
-        name : '/timeouts/pause'
     });
     ok_anxiety = new ROSLIB.Param({
         ros : ros,
@@ -163,12 +153,16 @@ function ros_connect() {
         org_params = message.parameters
         if(message.request_type == 'anxiety test'){
             record_nao(recording_len);
-            msg = 'Is the child comfortable with the robot?'
-            message.parameters = ['Yes - Continue','No - Child distressed']
+            msg = 'Does the child appear anxious and need additional support?'
+            message.parameters = ['No - Continue', 'Yes - Provide support']
+        }else if(message.request_type == 'anxiety retest'){
+            msg = 'Is the child too anxious about the IV procedure to continue the interaction?'
+            message.parameters = ['No - Continue', 'Yes - Quit']
         }else if(message.request_type == 'type preference query'){
-            msg = 'Which of the following types of activities do you prefer?'
+            msg = 'Which of the following types of activities does the child prefer?'
+            message.parameters = ['Quiet Activities ', 'Song/Dance']
         }else if(message.request_type == 'activity preference query'){
-            msg = 'Which of the following activities do you prefer?'
+            msg = 'Which of the following activities does the child prefer?'
         }else if(message.request_type == 'engagement test'){
             msg = 'Please select True if the child is engaged, otherwise select False'
         }else if(message.request_type == 'engagement validate'){
@@ -186,11 +180,17 @@ function ros_connect() {
             }
             message.parameters = ['Yes - Ready']
         }else if(message.request_type == 'site check query'){
-            msg = 'Will a site check be performed?'
-            message.parameters = ['Yes','No']
+            msg = 'When ready for site check press yes. To skip site check press no'
+            message.parameters = ['Yes - Ready','No - Skip']
         }else if(message.request_type == 'procedure ended ok query'){
-            msg = 'Is the procedure going well?'
-            message.parameters = ['Yes - Going well','No - Not going well']
+            msg = 'When the procedure has complete press continue. If there are complications, press quit'
+            message.parameters = ['Procedure complete - Continue','Complications - Quit']
+        }else if(message.request_type == 'disengagement stop query'){
+            msg = 'The child is anxious and disengaged - Should the robot stop?'
+            message.parameters = ['Yes - Quit','No - Continue']
+        }else if(message.request_type == 'site check complete query'){
+            msg = 'Has the site check completed?'
+            message.parameters = ['Yes - Finished','No - Ongoing']
         }else{
             msg = 'Please select between the following options'
         }
@@ -389,7 +389,9 @@ function launch_kill() {
 				      data : "exit\n"
 		});
     winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
-    },2000);
+    saveLogs(planner_log_name);
+    saveLogs(core_log_name);
+    },3000);
 }
 function pub_request(msg) {
     requestModal.hide();
@@ -401,12 +403,22 @@ function pub_request(msg) {
     }
     var requested_msg = new ROSLIB.Message({
         plan_step: parseInt(p_step),
-        request_type: String(r_type),
+        request_type: String(r_type),//register disengagement
         parameters: [String(param)],
         duration: parseFloat(1.0)
     });
     request_pub.publish(requested_msg);
     console.log('Requested response: ' + requested_msg.parameters);
+}
+function register_disengagement() {
+    var disengagement_msg = new ROSLIB.Message({
+        plan_step: parseInt(p_step),
+        request_type: 'register disengagement',
+        parameters: [],
+        duration: parseFloat(1.0)
+    });
+    request_pub.publish(disengagement_msg);
+    console.log('Register disengagement: ' + disengagement_msg.request_type);
 }
 function forEachButton(func) {
     let elements = document.getElementsByTagName("button");
@@ -435,14 +447,6 @@ function change_volume(vol_level){
 function set_personalized_form(){
     child_name.set(sessionStorage.getItem('child_name'));
     hospital_name.set(sessionStorage.getItem('hospital_name'));
-    child_gender.set(sessionStorage.getItem('child_gender'));
-    child_color.set(sessionStorage.getItem('child_color'));
-    is_younger_child.set(sessionStorage.getItem('is_younger_child'));
-
-    //doactivity.set(parseInt(sessionStorage.getItem('t_doactivity')));
-    //query_response.set(parseInt(sessionStorage.getItem('t_query_response')));
-    //idle.set(parseInt(sessionStorage.getItem('t_idle')));
-    //pause.set(parseInt(sessionStorage.getItem('t_pause')));
 }
 //countdown
 function coundDown(countdown) {
@@ -482,4 +486,14 @@ window.onload = function () {
     document.getElementById("ros_status").innerHTML = " ";
     document.getElementById("web_status").innerHTML = " ";
     ros_connect();
+    const date = new Date();
+    var logs_prefix = file_name + '-' + date.toLocaleString("sv-SE", {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+    });
+    planner_log_name = logs_prefix + '-planner.log';  
+    planner_log.set(planner_log_name);
+    core_log_name = logs_prefix + '-core.log'; 
+    core_log.set(core_log_name);
 }
