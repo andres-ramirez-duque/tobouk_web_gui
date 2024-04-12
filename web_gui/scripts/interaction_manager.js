@@ -491,7 +491,7 @@ window.onload = function () {
         month: '2-digit',
         day: '2-digit',
         year: 'numeric'
-    });
+    }) + '-' + date.toLocaleTimeString("en-GB");
     planner_log_name = logs_prefix + '-planner.log';  
     planner_log.set(planner_log_name);
     core_log_name = logs_prefix + '-core.log'; 

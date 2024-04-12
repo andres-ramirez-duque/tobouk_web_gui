@@ -40,8 +40,10 @@ def main (argv):
             "reward whatdoyoumean":     'false',
             "reward blindinglights":     'false',
             "age": argv[2],
-            "iv": argv[3]
-        }}
+            "iv": argv[3],
+        }},
+        "maxsel": argv[0],
+        "rewa":  argv[1],
         }
         maxdselected["parameters"]["boolean_vars"]["maxdselected "+argv[0]] = 'true'
         maxdselected["parameters"]["boolean_vars"]["reward "+argv[1]] = 'true'
