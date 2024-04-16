@@ -48,7 +48,7 @@ def main (argv):
         maxdselected["parameters"]["boolean_vars"]["maxdselected "+argv[0]] = 'true'
         maxdselected["parameters"]["boolean_vars"]["reward "+argv[1]] = 'true'
         
-        with open('catkin_ws/src/tobo_planner/planning_service/model0.13/parameters_frames_scenario.yaml', 'w') as file:
+        with open('catkin_ws/src/tobo_planner/planning_service/model0.14/parameters_frames_scenario.yaml', 'w') as file:
           yaml.dump(maxdselected, file)
           file.close()
           
