@@ -10,6 +10,7 @@ var ok_anxiety;
 var child_name;
 var planner_log;
 var core_log;
+var video_log;
 var planner_log_name;
 var core_log_name;
 var nao_behavior_msg;
@@ -84,6 +85,10 @@ function ros_connect() {
     
     ros.on('close', function() {
         document.getElementById("web_status").innerHTML = "<span style='color: yellow;'>Closed</span>";
+    });
+    video_log = new ROSLIB.Param({
+        ros : ros,
+        name : '/video_log'
     });
     core_log = new ROSLIB.Param({
         ros : ros,
@@ -390,8 +395,10 @@ function launch_kill() {
 		});
     winObj.document.getElementById("shell").contentWindow.postMessage(message, url);
     saveLogs(planner_log_name);
-    saveLogs(core_log_name);
     },3000);
+    setTimeout(()=> {
+        saveLogs(core_log_name);
+        },4500);
 }
 function pub_request(msg) {
     requestModal.hide();
@@ -495,5 +502,6 @@ window.onload = function () {
     planner_log_name = logs_prefix + '-planner.log';  
     planner_log.set(planner_log_name);
     core_log_name = logs_prefix + '-core.log'; 
-    core_log.set(core_log_name);
+    core_log.set(core_log_name); 
+    video_log.set(logs_prefix);
 }
